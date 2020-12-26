@@ -1,12 +1,14 @@
 package service
 
+import "context"
+
 type Blog interface {
 	// 创建者 返回用户
-	Proposer() User
+	Proposer(context.Context) User
 	// 创建时间 返回时间戳
-	ProposeTime() int64
+	ProposeTime(context.Context) int64
 	// 是否拥有节点
-	HasNode() bool
+	HasNode(context.Context) bool
 	// 创建节点
-	CreateNode(Node) error
+	CreateNode(context.Context, Node) error
 }

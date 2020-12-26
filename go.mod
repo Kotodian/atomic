@@ -9,6 +9,7 @@ require (
 	github.com/aokoli/goutils v1.1.0 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/envoyproxy/protoc-gen-validate v0.4.1 // indirect
+	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.0 // indirect
@@ -32,7 +33,7 @@ require (
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.0.3 // indirect
-	gorm.io/gorm v1.20.9 // indirect
+	gorm.io/gorm v1.20.9
 )
 
 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0

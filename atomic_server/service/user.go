@@ -1,12 +1,17 @@
 package service
 
+import (
+	"context"
+	"gorm.io/gorm"
+)
+
 type User interface {
 	// 登录
-	Login(string, string) error
+	Login(context.Context, *gorm.DB) error
 	// 创建博客
-	CreateBlog(Blog) error
+	CreateBlog(context.Context, *gorm.DB, Blog) error
 	// 删除博客
-	DeleteBlog(Blog) error
+	DeleteBlog(context.Context, *gorm.DB, Blog) error
 	// 收藏博客
-	CollectBlog(Blog) error
+	CollectBlog(context.Context, *gorm.DB, Blog) error
 }
