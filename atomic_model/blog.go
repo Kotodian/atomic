@@ -1,6 +1,8 @@
-package service
+package atomic_model
 
-import "context"
+import (
+	"context"
+)
 
 type Blog interface {
 	// 创建者 返回用户
@@ -11,4 +13,8 @@ type Blog interface {
 	HasNode(context.Context) bool
 	// 创建节点
 	CreateNode(context.Context, Node) error
+	// 标题
+	Title(ctx context.Context) (string, error)
+	// 文章
+	Content(context.Context) (string, error)
 }

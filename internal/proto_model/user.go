@@ -1,12 +1,12 @@
 package proto_model
 
 import (
-	"atomic/atomic_model"
+	user2 "atomic/atomic_model/user"
 	"atomic/atomic_server/proto/user"
 )
 
-func User(user *user.User) *atomic_model.User {
-	return &atomic_model.User{
+func User(user *user.User) *user2.User {
+	return &user2.User{
 		Id:       user.Id,
 		Username: user.Username,
 		Nickname: user.Nickname,

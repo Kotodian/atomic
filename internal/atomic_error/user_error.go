@@ -1,4 +1,4 @@
-package user_err
+package atomic_error
 
 import "errors"
 
