@@ -11,6 +11,8 @@ type Mysql struct {
 	option *MysqlOption
 }
 
+const DefaultDSN = ""
+
 func (m *Mysql) Init(ctx context.Context, dsn string) (*gorm.DB, error) {
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                      dsn,

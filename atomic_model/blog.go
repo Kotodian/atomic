@@ -13,8 +13,10 @@ type Blog interface {
 	HasNode(context.Context) bool
 	// 创建节点
 	CreateNode(context.Context, Node) error
-	// 标题
-	Title(ctx context.Context) (string, error)
-	// 文章
-	Content(context.Context) (string, error)
+	// 插入
+	Insert(ctx context.Context, userId int64) error
+	// 更新
+	Update(ctx context.Context) error
+	// 删除
+	Delete(ctx context.Context) error
 }
