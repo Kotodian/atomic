@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "atomic/atomic_server/proto/user";
+
+//在 D:\ protoc --proto_path=. --go_out=. --micro_out=. atomic/atomic_server/proto/user/user.proto
+service UserService {
+
+}
+
+
+message User {
+  // userId 唯一标识
+  int64 id = 1;
+  // 用户名
+  string username = 2;
+  // 别名
+  string nickname = 3;
+  // 邮箱
+  string email = 4;
+  // 电话
+  string phone = 5;
+}
