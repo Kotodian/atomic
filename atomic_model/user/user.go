@@ -5,6 +5,7 @@ import (
 	"atomic/internal/atomic_error"
 	"atomic/internal/log"
 	"context"
+	"errors"
 	"gorm.io/gorm"
 )
 
@@ -23,7 +24,12 @@ const user = "user"
 func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 	tmp := &User{}
 
-	db.Table(user).Where("username = ?", u.Username).First(&tmp)
+	err := db.WithContext(ctx).Table(user).Where("username = ?", u.Username).First(&tmp).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return atomic_error.UserNotExists
+	}
+
 	if tmp.Password != u.Password {
 		log.Error(atomic_error.PasswordWrong, ctx)
 		return atomic_error.PasswordWrong

@@ -20,7 +20,7 @@ func (m *MysqlOption) DefaultOption() {
 }
 
 const (
-	mysqlDefaultDSN               = ""
+	mysqlDefaultDSN               = "root:7k164173520@tcp(127.0.0.1:3306)/atomic?charset=utf8mb4&parseTime=True&loc=Local"
 	mysqlDefaultStringSize        = 255
 	mysqlDisableDatetimePrecision = true
 )
