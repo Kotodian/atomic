@@ -16,7 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"atomic/atomic_model/blog"
 	"atomic/atomic_model/user"
 	"atomic/atomic_store"
 	"context"
@@ -44,7 +43,7 @@ to quickly create a Cobra application.`,
 			if err != nil {
 				panic(err)
 			}
-			err = db.AutoMigrate(&user.User{}, &blog.CommonBlog{})
+			err = db.AutoMigrate(&user.User{})
 			if err != nil {
 				panic(err)
 			}

@@ -12,6 +12,7 @@ type Mysql struct {
 }
 
 func (m *Mysql) DatabaseDefaultOption() {
+	m.option = new(MysqlOption)
 	m.option.DefaultOption()
 }
 
