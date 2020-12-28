@@ -3,6 +3,7 @@ package register
 import (
 	"atomic/atomic_server/atomic_service"
 	"atomic/atomic_server/proto/user"
+	"atomic/internal/etcd"
 	"atomic/internal/log"
 	"atomic/internal/trace"
 	"context"
@@ -13,12 +14,12 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
-func UserRegister(ctx context.Context) {
+func UserServiceRegister(ctx context.Context) {
 	log.Debug("注册用户服务", ctx)
 
 	// jaeger
 	// todo: 部署完jaeger使用
-	t, io, err := trace.NewTracer("go.atomic.srv.user", "")
+	t, io, err := trace.NewTracer(atomic_service.GetUserServiceName(), trace.JaegerAddr)
 	if err != nil {
 		log.Error(err.Error(), ctx)
 		return
@@ -28,18 +29,19 @@ func UserRegister(ctx context.Context) {
 	opentracing.SetGlobalTracer(t)
 
 	reg := etcdv3.NewRegistry(
-		registry.Addrs("127.0.0.1:2379"),
+		registry.Addrs(etcd.ETCD1, etcd.ETCD2, etcd.ETCD3),
 	)
 
 	srv := micro.NewService(
-		micro.Name("go.atomic.srv.user"),
+		micro.Name(atomic_service.GetUserServiceName()),
 		micro.Address(":10001"),
 		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
 		micro.Registry(reg),
 	)
-	srv.Init()
-	err = user.RegisterUserServiceHandler(srv.Server(), new(atomic_service.UserService))
 
+	srv.Init()
+	userService := new(atomic_service.UserService)
+	err = registerUser(ctx, srv, userService)
 	if err != nil {
 		log.Error(err.Error(), ctx)
 		return
@@ -48,4 +50,13 @@ func UserRegister(ctx context.Context) {
 	if err := srv.Run(); err != nil {
 		panic(err)
 	}
+}
+
+func registerUser(ctx context.Context, srv micro.Service, atomicUser *atomic_service.UserService) error {
+	err := user.RegisterUserServiceHandler(srv.Server(), atomicUser)
+	if err != nil {
+		log.Error(err.Error(), ctx)
+		return err
+	}
+	return nil
 }

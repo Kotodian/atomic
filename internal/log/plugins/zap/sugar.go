@@ -40,7 +40,7 @@ func (l *Log) Fatal(s string, args ...interface{}) {
 //
 
 //判断其他类型--start
-func getOtherFileds(format string, args ...interface{}) (string, []zap.Field) {
+func getOtherFields(format string, args ...interface{}) (string, []zap.Field) {
 	//判断是否有context
 	l := len(args)
 	if l > 0 {
@@ -54,32 +54,32 @@ func getOtherFileds(format string, args ...interface{}) (string, []zap.Field) {
 }
 
 func (l *Log) Debugf(format string, args ...interface{}) {
-	s, f := getOtherFileds(format, args...)
+	s, f := getOtherFields(format, args...)
 	l.logger.Debug(s, f...)
 }
 
 func (l *Log) Infof(format string, args ...interface{}) {
-	s, f := getOtherFileds(format, args...)
+	s, f := getOtherFields(format, args...)
 	l.logger.Info(s, f...)
 }
 
 func (l *Log) Warnf(format string, args ...interface{}) {
-	s, f := getOtherFileds(format, args...)
+	s, f := getOtherFields(format, args...)
 	l.logger.Warn(s, f...)
 }
 
 func (l *Log) Errorf(format string, args ...interface{}) {
-	s, f := getOtherFileds(format, args...)
+	s, f := getOtherFields(format, args...)
 	l.logger.Error(s, f...)
 }
 
 func (l *Log) Panicf(format string, args ...interface{}) {
-	s, f := getOtherFileds(format, args...)
+	s, f := getOtherFields(format, args...)
 	l.logger.Panic(s, f...)
 }
 
 func (l *Log) Fatalf(format string, args ...interface{}) {
-	s, f := getOtherFileds(format, args...)
+	s, f := getOtherFields(format, args...)
 	l.logger.Fatal(s, f...)
 }
 

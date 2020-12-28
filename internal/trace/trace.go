@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+const (
+	JaegerAddr = "192.168.2.235:6831"
+)
+
 // 创建一个jaeger Tracer
 func NewTracer(serviceName string, addr string) (opentracing.Tracer, io.Closer, error) {
 	cfg := jaegercfg.Configuration{
