@@ -10,7 +10,7 @@ func New(ctx context.Context) *validator.Validate {
 	validate := validator.New()
 	err := validate.RegisterValidation("NameValidationErrors", NameValidationErrors)
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return nil
 	}
 	return validate

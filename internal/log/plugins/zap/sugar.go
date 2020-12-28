@@ -27,8 +27,8 @@ func (l *Log) Info(s string, args ...interface{}) {
 func (l *Log) Warn(s string, args ...interface{}) {
 	l.logger.Warn(s, getCtxFields(args...)...)
 }
-func (l *Log) Error(s string, args ...interface{}) {
-	l.logger.Error(s, getCtxFields(args...)...)
+func (l *Log) Error(s error, args ...interface{}) {
+	l.logger.Error(s.Error(), getCtxFields(args...)...)
 }
 func (l *Log) Panic(s string, args ...interface{}) {
 	l.logger.Panic(s, getCtxFields(args...)...)
@@ -68,8 +68,8 @@ func (l *Log) Warnf(format string, args ...interface{}) {
 	l.logger.Warn(s, f...)
 }
 
-func (l *Log) Errorf(format string, args ...interface{}) {
-	s, f := getOtherFields(format, args...)
+func (l *Log) Errorf(format error, args ...interface{}) {
+	s, f := getOtherFields(format.Error(), args...)
 	l.logger.Error(s, f...)
 }
 

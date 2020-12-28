@@ -19,7 +19,7 @@ func Info(msg string, args ...interface{}) {
 func Warn(msg string, args ...interface{}) {
 	l.Warn(msg, args...)
 }
-func Error(msg string, args ...interface{}) {
+func Error(msg error, args ...interface{}) {
 	l.Error(msg, args...)
 }
 func Panic(msg string, args ...interface{}) {
@@ -39,7 +39,7 @@ func Infof(format string, args ...interface{}) {
 func Warnf(format string, args ...interface{}) {
 	l.Warnf(format, args...)
 }
-func Errorf(format string, args ...interface{}) {
+func Errorf(format error, args ...interface{}) {
 	l.Errorf(format, args...)
 }
 func Panicf(format string, args ...interface{}) {

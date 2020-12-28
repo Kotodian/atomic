@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// 普通用户 以后添加各种用户
 type User struct {
 	Id       int64  `gorm:"id"`
 	Username string `gorm:"username"`
@@ -24,7 +25,7 @@ func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 
 	db.Table(user).Where("username = ?", u.Username).First(&tmp)
 	if tmp.Password != u.Password {
-		log.Error(atomic_error.PasswordWrong.Error(), ctx)
+		log.Error(atomic_error.PasswordWrong, ctx)
 		return atomic_error.PasswordWrong
 	}
 

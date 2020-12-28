@@ -11,22 +11,19 @@ type Mysql struct {
 	option *MysqlOption
 }
 
-const DefaultDSN = ""
+func (m *Mysql) DatabaseDefaultOption() {
+	m.option.DefaultOption()
+}
 
-func (m *Mysql) Init(ctx context.Context, dsn string) (*gorm.DB, error) {
+func (m *Mysql) Init(ctx context.Context) (*gorm.DB, error) {
 	db, err := gorm.Open(mysql.New(mysql.Config{
-		DSN:                      dsn,
+		DSN:                      m.option.dsn,
 		DefaultStringSize:        m.option.DefaultStringSize,
 		DisableDatetimePrecision: m.option.DisableDatetimePrecision,
 	}), &gorm.Config{})
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return nil, err
 	}
 	return db, nil
-}
-
-// 参数设置
-func (m *Mysql) Option(opt *MysqlOption) {
-	m.option = opt
 }

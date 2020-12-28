@@ -18,7 +18,7 @@ func NewClient(ctx context.Context, url string, timeout time.Duration) (*clientv
 	})
 
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return nil, err
 	}
 
@@ -28,7 +28,7 @@ func NewClient(ctx context.Context, url string, timeout time.Duration) (*clientv
 func Get(ctx context.Context, client *clientv3.Client, key string) ([]byte, error) {
 	result, err := client.Get(ctx, key)
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return nil, err
 	}
 	return result.Kvs[0].Value, nil
@@ -37,13 +37,13 @@ func Get(ctx context.Context, client *clientv3.Client, key string) ([]byte, erro
 func Put(ctx context.Context, client *clientv3.Client, key string, value string, timeout int64) error {
 	lease, err := client.Grant(ctx, timeout)
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return err
 	}
 
 	_, err = client.Put(ctx, key, value, clientv3.WithLease(lease.ID))
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return err
 	}
 	return nil
@@ -52,7 +52,7 @@ func Put(ctx context.Context, client *clientv3.Client, key string, value string,
 func Del(ctx context.Context, client clientv3.Client, key string) error {
 	_, err := client.Delete(ctx, key)
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return err
 	}
 	return nil

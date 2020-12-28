@@ -22,6 +22,8 @@ message User {
   string email = 4;
   // 电话
   string phone = 5;
+  // 密码
+  string password = 6;
 }
 
 message LoginRequest {

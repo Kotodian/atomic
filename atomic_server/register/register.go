@@ -1,7 +1,7 @@
 package register
 
 import (
-	"atomic/atomic_server/atomic_service"
+	"atomic/atomic_server/atomic_handler"
 	"atomic/atomic_server/proto/user"
 	"atomic/internal/etcd"
 	"atomic/internal/log"
@@ -18,10 +18,9 @@ func UserServiceRegister(ctx context.Context) {
 	log.Debug("注册用户服务", ctx)
 
 	// jaeger
-	// todo: 部署完jaeger使用
-	t, io, err := trace.NewTracer(atomic_service.GetUserServiceName(), trace.JaegerAddr)
+	t, io, err := trace.NewTracer(atomic_handler.GetUserServiceName(), trace.JaegerAddr)
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return
 	}
 	defer io.Close()
@@ -33,17 +32,17 @@ func UserServiceRegister(ctx context.Context) {
 	)
 
 	srv := micro.NewService(
-		micro.Name(atomic_service.GetUserServiceName()),
+		micro.Name(atomic_handler.GetUserServiceName()),
 		micro.Address(":10001"),
 		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
 		micro.Registry(reg),
 	)
 
 	srv.Init()
-	userService := new(atomic_service.UserService)
+	userService := new(atomic_handler.UserService)
 	err = registerUser(ctx, srv, userService)
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return
 	}
 
@@ -52,10 +51,10 @@ func UserServiceRegister(ctx context.Context) {
 	}
 }
 
-func registerUser(ctx context.Context, srv micro.Service, atomicUser *atomic_service.UserService) error {
+func registerUser(ctx context.Context, srv micro.Service, atomicUser *atomic_handler.UserService) error {
 	err := user.RegisterUserServiceHandler(srv.Server(), atomicUser)
 	if err != nil {
-		log.Error(err.Error(), ctx)
+		log.Error(err, ctx)
 		return err
 	}
 	return nil
