@@ -1,6 +1,7 @@
 package atomic_store
 
 import (
+	"atomic/internal/atomic_error"
 	"atomic/internal/log"
 	"context"
 	"gorm.io/gorm"
@@ -38,7 +39,7 @@ func DefaultDatabase(ctx context.Context, database Database) (*gorm.DB, error) {
 	db, err := database.Init(ctx)
 	if err != nil {
 		log.Error(err)
-		return nil, err
+		return nil, atomic_error.ErrConnect
 	}
 	return db, nil
 }

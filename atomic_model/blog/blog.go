@@ -2,16 +2,14 @@ package blog
 
 import (
 	"atomic/atomic_model"
-	"atomic/atomic_server/proto/user"
 	"context"
 )
 
 type CommonBlog struct {
-	Id      int64     `gorm:"id"`
-	User    user.User `gorm:"foreignKey:UserId"`
-	UserId  int64     `gorm:"user_id"`
-	title   string    `gorm:"title"`
-	content string    `gorm:"content"`
+	Id      int64  `gorm:"id"`
+	UserId  int64  `gorm:"user_id"`
+	title   string `gorm:"title"`
+	content string `gorm:"content"`
 }
 
 func (c *CommonBlog) Update(ctx context.Context) error {

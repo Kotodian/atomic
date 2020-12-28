@@ -26,8 +26,29 @@ func (u *UserService) Login(ctx context.Context, req *user.LoginRequest, resp *u
 
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
+		return
 	}
 
+	resp.Res = common.SuccessResponse(err)
+
+	return
+}
+
+func (u *UserService) Register(ctx context.Context, req *user.RegisterRequest, resp *user.RegisterResponse) (err error) {
+	m := proto_model.User(&user.User{
+		Username: req.Username,
+		Password: req.Password,
+		Nickname: req.Nickname,
+		Email:    req.Email,
+		Phone:    req.Phone,
+	})
+
+	err = atomic_service.Register(ctx, m)
+
+	if err != nil {
+		resp.Res = common.ServerErrResponse(err)
+		return
+	}
 	resp.Res = common.SuccessResponse(err)
 
 	return

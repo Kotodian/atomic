@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"atomic/atomic_model/blog"
 	"atomic/atomic_model/user"
 	"atomic/atomic_store"
 	"context"
@@ -29,7 +30,7 @@ var (
 // dbCmd represents the db command
 var dbCmd = &cobra.Command{
 	Use:   "db",
-	Short: "A brief description of your command",
+	Short: "自动建表",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -43,7 +44,7 @@ to quickly create a Cobra application.`,
 			if err != nil {
 				panic(err)
 			}
-			err = db.AutoMigrate(&user.User{})
+			err = db.AutoMigrate(&user.User{}, &blog.CommonBlog{})
 			if err != nil {
 				panic(err)
 			}

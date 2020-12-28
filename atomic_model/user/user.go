@@ -49,3 +49,12 @@ func (u *User) DeleteBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Bl
 func (u *User) CollectBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
 	panic("implement me")
 }
+
+func (u *User) Register(ctx context.Context, db *gorm.DB) error {
+	err := db.WithContext(ctx).Table(user).Create(u).Error
+	if err != nil {
+		log.Error(err, ctx)
+		return atomic_error.ErrUserCreate
+	}
+	return nil
+}
