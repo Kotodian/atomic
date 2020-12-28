@@ -16,15 +16,19 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
+	"atomic/atomic_server/register"
 	"github.com/spf13/cobra"
+)
+
+var (
+	port        = 8090
+	serviceName = "user"
 )
 
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
 	Use:   "server",
-	Short: "A brief description of your command",
+	Short: "启动分布式服务",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -32,7 +36,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
+		register.UserServiceRegister(port)
 	},
 }
 
@@ -48,4 +52,11 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//serverCmd.Flags().StringP("",)
+
+	// 端口号
+	serverCmd.Flags().IntVarP(&port, "port", "p", 8090, "服务所占用的端口")
+	// 服务名
+	serverCmd.Flags().StringVarP(&serviceName, "register", "r", "user", "所需要注册的服务")
+
 }
