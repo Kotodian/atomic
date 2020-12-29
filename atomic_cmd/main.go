@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "atomic/atomic_cli/cmd"
+import "atomic/atomic_cmd/cmd"
 
 func main() {
 	cmd.Execute()
