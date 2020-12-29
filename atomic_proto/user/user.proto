@@ -24,6 +24,8 @@ service UserService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   // 更新接口
   rpc Update(UpdateRequest) returns (UpdateResponse);
+  // 创建一个最简单的博客
+  rpc CreateCommonBlog(CreateCommonBlogRequest) returns (CreateCommonBlogResponse);
 }
 
 
@@ -97,4 +99,18 @@ message UpdateRequest {
 message UpdateResponse {
     // 基本返回信息
     common.Response res = 1;
+}
+
+message CreateCommonBlogRequest {
+    // 标题 6到10个字之内
+    string title = 1 [(validator.field) = {length_gt:5, length_lt:11}];
+    // 文章内容
+    repeated string content = 2;
+    // 用户唯一标识
+    int64 user_id = 3;
+}
+
+message CreateCommonBlogResponse {
+  // 基本返回信息
+  common.Response res = 1;
 }

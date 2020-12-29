@@ -2,7 +2,10 @@ package blog
 
 import (
 	"atomic/atomic_model"
+	"atomic/internal/atomic_error"
+	"atomic/internal/log"
 	"context"
+	"gorm.io/gorm"
 )
 
 type CommonBlog struct {
@@ -12,30 +15,40 @@ type CommonBlog struct {
 	content string `gorm:"content"`
 }
 
-func (c *CommonBlog) Update(ctx context.Context) error {
+const (
+	blog = "blogs"
+)
+
+func (c *CommonBlog) Update(ctx context.Context, db *gorm.DB) error {
 	panic("implement me")
 }
 
-func (c *CommonBlog) Delete(ctx context.Context) error {
+func (c *CommonBlog) Delete(ctx context.Context, db *gorm.DB) error {
 	panic("implement me")
 }
 
-func (c *CommonBlog) Proposer(ctx context.Context) atomic_model.User {
+func (c *CommonBlog) Proposer(ctx context.Context, db *gorm.DB) atomic_model.User {
 	panic("implement me")
 }
 
-func (c *CommonBlog) ProposeTime(ctx context.Context) int64 {
+func (c *CommonBlog) ProposeTime(ctx context.Context, db *gorm.DB) int64 {
 	panic("implement me")
 }
 
-func (c *CommonBlog) HasNode(ctx context.Context) bool {
+func (c *CommonBlog) HasNode(ctx context.Context, db *gorm.DB) bool {
 	panic("implement me")
 }
 
-func (c *CommonBlog) CreateNode(ctx context.Context, node atomic_model.Node) error {
+func (c *CommonBlog) CreateNode(ctx context.Context, db *gorm.DB, node atomic_model.Node) error {
 	panic("implement me")
 }
 
-func (c *CommonBlog) Insert(ctx context.Context, userid int64) error {
-	panic("implement me")
+func (c *CommonBlog) Insert(ctx context.Context, db *gorm.DB, userid int64) error {
+	c.UserId = userid
+	err := db.WithContext(ctx).Create(c).Error
+	if err != nil {
+		log.Error(err)
+		return atomic_error.ErrCreateBlog
+	}
+	return nil
 }

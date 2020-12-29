@@ -43,6 +43,8 @@ type UserService interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
 	// 更新接口
 	Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error)
+	// 创建一个最简单的博客
+	CreateCommonBlog(ctx context.Context, in *CreateCommonBlogRequest, opts ...client.CallOption) (*CreateCommonBlogResponse, error)
 }
 
 type userService struct {
@@ -93,6 +95,16 @@ func (c *userService) Update(ctx context.Context, in *UpdateRequest, opts ...cli
 	return out, nil
 }
 
+func (c *userService) CreateCommonBlog(ctx context.Context, in *CreateCommonBlogRequest, opts ...client.CallOption) (*CreateCommonBlogResponse, error) {
+	req := c.c.NewRequest(c.name, "UserService.CreateCommonBlog", in)
+	out := new(CreateCommonBlogResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for UserService service
 
 type UserServiceHandler interface {
@@ -102,6 +114,8 @@ type UserServiceHandler interface {
 	Register(context.Context, *RegisterRequest, *RegisterResponse) error
 	// 更新接口
 	Update(context.Context, *UpdateRequest, *UpdateResponse) error
+	// 创建一个最简单的博客
+	CreateCommonBlog(context.Context, *CreateCommonBlogRequest, *CreateCommonBlogResponse) error
 }
 
 func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts ...server.HandlerOption) error {
@@ -109,6 +123,7 @@ func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts .
 		Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error
 		Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error
 		Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error
+		CreateCommonBlog(ctx context.Context, in *CreateCommonBlogRequest, out *CreateCommonBlogResponse) error
 	}
 	type UserService struct {
 		userService
@@ -131,4 +146,8 @@ func (h *userServiceHandler) Register(ctx context.Context, in *RegisterRequest, 
 
 func (h *userServiceHandler) Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error {
 	return h.UserServiceHandler.Update(ctx, in, out)
+}
+
+func (h *userServiceHandler) CreateCommonBlog(ctx context.Context, in *CreateCommonBlogRequest, out *CreateCommonBlogResponse) error {
+	return h.UserServiceHandler.CreateCommonBlog(ctx, in, out)
 }

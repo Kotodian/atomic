@@ -11,6 +11,10 @@ import (
 type UserService struct {
 }
 
+func (u *UserService) CreateCommonBlog(ctx context.Context, req *pbUser.CreateCommonBlogRequest, resp *pbUser.CreateCommonBlogResponse) (err error) {
+	panic("implement me")
+}
+
 func (u *UserService) Login(ctx context.Context, req *pbUser.LoginRequest, resp *pbUser.LoginResponse) (err error) {
 	// proto转换
 	m := proto_model.User(&pbUser.User{

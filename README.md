@@ -8,11 +8,11 @@
 ![img.png](整体架构.png)
 
 ### 项目架构
-![img_1.png](项目架构.png)
+![img.png](项目架构.png)
 
 #### atomic_api
 该文件夹主要是存放对外开放的api,主要是通过gin实现,通过micro api网关请求,转发到该api服务,然后api转发到相应的内部服务
-#### atomic_cli
+#### atomic_cmd
 该文件夹主要是存放命令行操作以及启动服务的代码
 #### atomic_client
 该文件夹主要是测试服务能否被发现
