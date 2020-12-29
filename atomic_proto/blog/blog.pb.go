@@ -4,8 +4,6 @@
 package blog
 
 import (
-	common "atomic/atomic_proto/common"
-	user "atomic/atomic_proto/user"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
@@ -22,103 +20,75 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type CreateBlogRequest struct {
-	User                 *user.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	Title                string     `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Content              string     `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
-	XXX_unrecognized     []byte     `json:"-"`
-	XXX_sizecache        int32      `json:"-"`
+type CommonBlog struct {
+	// 唯一标识符
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// 博客标题
+	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	// 文章内容
+	Content []string `protobuf:"bytes,3,rep,name=content,proto3" json:"content,omitempty"`
+	// 属于某个用户
+	Username             string   `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateBlogRequest) Reset()         { *m = CreateBlogRequest{} }
-func (m *CreateBlogRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateBlogRequest) ProtoMessage()    {}
-func (*CreateBlogRequest) Descriptor() ([]byte, []int) {
+func (m *CommonBlog) Reset()         { *m = CommonBlog{} }
+func (m *CommonBlog) String() string { return proto.CompactTextString(m) }
+func (*CommonBlog) ProtoMessage()    {}
+func (*CommonBlog) Descriptor() ([]byte, []int) {
 	return fileDescriptor_92db37cf00cb4a6f, []int{0}
 }
 
-func (m *CreateBlogRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CreateBlogRequest.Unmarshal(m, b)
+func (m *CommonBlog) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CommonBlog.Unmarshal(m, b)
 }
-func (m *CreateBlogRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CreateBlogRequest.Marshal(b, m, deterministic)
+func (m *CommonBlog) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CommonBlog.Marshal(b, m, deterministic)
 }
-func (m *CreateBlogRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateBlogRequest.Merge(m, src)
+func (m *CommonBlog) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CommonBlog.Merge(m, src)
 }
-func (m *CreateBlogRequest) XXX_Size() int {
-	return xxx_messageInfo_CreateBlogRequest.Size(m)
+func (m *CommonBlog) XXX_Size() int {
+	return xxx_messageInfo_CommonBlog.Size(m)
 }
-func (m *CreateBlogRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateBlogRequest.DiscardUnknown(m)
+func (m *CommonBlog) XXX_DiscardUnknown() {
+	xxx_messageInfo_CommonBlog.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CreateBlogRequest proto.InternalMessageInfo
+var xxx_messageInfo_CommonBlog proto.InternalMessageInfo
 
-func (m *CreateBlogRequest) GetUser() *user.User {
+func (m *CommonBlog) GetId() int64 {
 	if m != nil {
-		return m.User
+		return m.Id
 	}
-	return nil
+	return 0
 }
 
-func (m *CreateBlogRequest) GetTitle() string {
+func (m *CommonBlog) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *CreateBlogRequest) GetContent() string {
+func (m *CommonBlog) GetContent() []string {
 	if m != nil {
 		return m.Content
-	}
-	return ""
-}
-
-type CreateBlogResponse struct {
-	Res                  *common.Response `protobuf:"bytes,1,opt,name=res,proto3" json:"res,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
-	XXX_unrecognized     []byte           `json:"-"`
-	XXX_sizecache        int32            `json:"-"`
-}
-
-func (m *CreateBlogResponse) Reset()         { *m = CreateBlogResponse{} }
-func (m *CreateBlogResponse) String() string { return proto.CompactTextString(m) }
-func (*CreateBlogResponse) ProtoMessage()    {}
-func (*CreateBlogResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_92db37cf00cb4a6f, []int{1}
-}
-
-func (m *CreateBlogResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CreateBlogResponse.Unmarshal(m, b)
-}
-func (m *CreateBlogResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CreateBlogResponse.Marshal(b, m, deterministic)
-}
-func (m *CreateBlogResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateBlogResponse.Merge(m, src)
-}
-func (m *CreateBlogResponse) XXX_Size() int {
-	return xxx_messageInfo_CreateBlogResponse.Size(m)
-}
-func (m *CreateBlogResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateBlogResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_CreateBlogResponse proto.InternalMessageInfo
-
-func (m *CreateBlogResponse) GetRes() *common.Response {
-	if m != nil {
-		return m.Res
 	}
 	return nil
 }
 
+func (m *CommonBlog) GetUsername() string {
+	if m != nil {
+		return m.Username
+	}
+	return ""
+}
+
 func init() {
-	proto.RegisterType((*CreateBlogRequest)(nil), "blog.CreateBlogRequest")
-	proto.RegisterType((*CreateBlogResponse)(nil), "blog.CreateBlogResponse")
+	proto.RegisterType((*CommonBlog)(nil), "blog.CommonBlog")
 }
 
 func init() {
@@ -126,19 +96,15 @@ func init() {
 }
 
 var fileDescriptor_92db37cf00cb4a6f = []byte{
-	// 224 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x50, 0xc1, 0x4a, 0x03, 0x31,
-	0x10, 0x65, 0x6d, 0xad, 0x38, 0xbd, 0xe8, 0x20, 0x18, 0xf6, 0x20, 0x65, 0x3d, 0xd8, 0x53, 0x0a,
-	0xf5, 0x22, 0x78, 0xd3, 0x9b, 0xc7, 0x88, 0x67, 0x69, 0xc3, 0x50, 0x16, 0x76, 0x33, 0x35, 0x99,
-	0xfa, 0xfd, 0x92, 0xc9, 0x16, 0x84, 0xdd, 0xcb, 0x4c, 0xde, 0xbc, 0x97, 0x37, 0x2f, 0x81, 0xc7,
-	0x9d, 0x70, 0xdf, 0xfa, 0x4d, 0x69, 0xdf, 0xc7, 0xc8, 0xc2, 0x9b, 0x7d, 0xc7, 0x07, 0x2d, 0x56,
-	0x31, 0xce, 0xf3, 0xb9, 0x9e, 0x94, 0x9e, 0x12, 0x45, 0x2d, 0x45, 0x5a, 0x3f, 0x4d, 0x89, 0x3c,
-	0xf7, 0x3d, 0x87, 0xa1, 0x15, 0x61, 0xe3, 0xe1, 0xf6, 0x3d, 0xd2, 0x4e, 0xe8, 0xad, 0xe3, 0x83,
-	0xa3, 0x9f, 0x13, 0x25, 0xc1, 0x07, 0x98, 0x67, 0x2f, 0x53, 0xad, 0xaa, 0xf5, 0x72, 0x0b, 0x56,
-	0x8d, 0xbf, 0x12, 0x45, 0xa7, 0x73, 0xbc, 0x83, 0x4b, 0x69, 0xa5, 0x23, 0x73, 0xb1, 0xaa, 0xd6,
-	0xd7, 0xae, 0x00, 0x34, 0x70, 0xe5, 0x39, 0x08, 0x05, 0x31, 0x33, 0x9d, 0x9f, 0x61, 0xf3, 0x02,
-	0xf8, 0x7f, 0x49, 0x3a, 0x72, 0x48, 0x84, 0x0d, 0xcc, 0x22, 0xa5, 0x61, 0xc9, 0x8d, 0x1d, 0x62,
-	0x9d, 0x69, 0x97, 0xc9, 0xed, 0x07, 0x2c, 0xf3, 0x9d, 0x4f, 0x8a, 0xbf, 0xad, 0x27, 0x7c, 0x85,
-	0x45, 0x31, 0xc2, 0x7b, 0xab, 0x1f, 0x33, 0xca, 0x5e, 0x9b, 0x31, 0x51, 0x0c, 0xf7, 0x0b, 0x7d,
-	0xf1, 0xf3, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x96, 0x8a, 0x21, 0xe0, 0x6c, 0x01, 0x00, 0x00,
+	// 157 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x4e, 0x2c, 0xc9, 0xcf,
+	0xcd, 0x4c, 0xd6, 0x87, 0x50, 0xf1, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0xfa, 0x49, 0x39, 0xf9, 0xe9,
+	0x60, 0x42, 0x0f, 0xcc, 0x17, 0x62, 0x01, 0xb1, 0x95, 0x32, 0xb8, 0xb8, 0x9c, 0xf3, 0x73, 0x73,
+	0xf3, 0xf3, 0x9c, 0x72, 0xf2, 0xd3, 0x85, 0xf8, 0xb8, 0x98, 0x32, 0x53, 0x24, 0x18, 0x15, 0x18,
+	0x35, 0x98, 0x83, 0x98, 0x32, 0x53, 0x84, 0x44, 0xb8, 0x58, 0x4b, 0x32, 0x4b, 0x72, 0x52, 0x25,
+	0x98, 0x14, 0x18, 0x35, 0x38, 0x83, 0x20, 0x1c, 0x21, 0x09, 0x2e, 0xf6, 0xe4, 0xfc, 0xbc, 0x92,
+	0xd4, 0xbc, 0x12, 0x09, 0x66, 0x05, 0x66, 0x0d, 0xce, 0x20, 0x18, 0x57, 0x48, 0x8a, 0x8b, 0xa3,
+	0xb4, 0x38, 0xb5, 0x28, 0x2f, 0x31, 0x37, 0x55, 0x82, 0x05, 0xac, 0x05, 0xce, 0x37, 0xe2, 0xe5,
+	0xe2, 0x06, 0xd9, 0x11, 0x9c, 0x5a, 0x54, 0x96, 0x99, 0x9c, 0x9a, 0xc4, 0x06, 0x76, 0x85, 0x31,
+	0x20, 0x00, 0x00, 0xff, 0xff, 0x2e, 0x43, 0x6f, 0x36, 0xac, 0x00, 0x00, 0x00,
 }

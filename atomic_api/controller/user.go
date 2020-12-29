@@ -11,6 +11,7 @@ import (
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/web"
 	"github.com/micro/go-plugins/registry/etcdv3"
+	"github.com/micro/go-plugins/wrapper/breaker/hystrix"
 	"net/http"
 )
 
@@ -28,7 +29,12 @@ func WebUser(engine *gin.Engine, port int) {
 		web.Registry(reg),
 	)
 
-	cli := pbUser.NewUserService(service.InnerUser, micro.NewService(micro.Name(service.InnerUser), micro.Registry(reg)).Client())
+	client := micro.NewService(
+		micro.Name(service.InnerUser),
+		micro.Registry(reg),
+		micro.WrapClient(hystrix.NewClientWrapper()),
+	).Client()
+	cliService := pbUser.NewUserService(service.InnerUser, client)
 
 	routerUser := engine.Group("user")
 	// 用户登录api接口
@@ -39,7 +45,7 @@ func WebUser(engine *gin.Engine, port int) {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
-		response, err := cli.Login(ctx, req)
+		response, err := cliService.Login(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
 			return
@@ -54,7 +60,7 @@ func WebUser(engine *gin.Engine, port int) {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
-		response, err := cli.Register(ctx, req)
+		response, err := cliService.Register(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
 			return
@@ -72,7 +78,22 @@ func WebUser(engine *gin.Engine, port int) {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
-		response, err := cli.Update(ctx, req)
+		response, err := cliService.Update(ctx, req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, response)
+	})
+	// 用户创建博客api接口
+	routerUser.POST("/createCommonBlog", func(ctx *gin.Context) {
+		req := &pbUser.CreateCommonBlogRequest{}
+		err := ctx.ShouldBindJSON(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+		response, err := cliService.CreateCommonBlog(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
 			return

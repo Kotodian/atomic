@@ -11,6 +11,7 @@ import (
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-plugins/registry/etcdv3"
+	limmiter "github.com/micro/go-plugins/wrapper/ratelimiter/uber"
 	wrapperTrace "github.com/micro/go-plugins/wrapper/trace/opentracing"
 	"github.com/opentracing/opentracing-go"
 )
@@ -36,6 +37,7 @@ func UserServiceRegister(port int) {
 		micro.Name(service.InnerUser),
 		micro.Address(fmt.Sprintf(":%d", port)),
 		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
+		micro.WrapHandler(limmiter.NewHandlerWrapper(100)),
 		micro.Registry(reg),
 	)
 	srv.Init()

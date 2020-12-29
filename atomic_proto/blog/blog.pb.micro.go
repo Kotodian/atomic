@@ -4,8 +4,6 @@
 package blog
 
 import (
-	_ "atomic/atomic_proto/common"
-	_ "atomic/atomic_proto/user"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
@@ -36,7 +34,6 @@ var _ server.Option
 // Client API for BlogService service
 
 type BlogService interface {
-	Create(ctx context.Context, in *CreateBlogRequest, opts ...client.CallOption) (*CreateBlogResponse, error)
 }
 
 type blogService struct {
@@ -57,25 +54,13 @@ func NewBlogService(name string, c client.Client) BlogService {
 	}
 }
 
-func (c *blogService) Create(ctx context.Context, in *CreateBlogRequest, opts ...client.CallOption) (*CreateBlogResponse, error) {
-	req := c.c.NewRequest(c.name, "BlogService.Create", in)
-	out := new(CreateBlogResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // Server API for BlogService service
 
 type BlogServiceHandler interface {
-	Create(context.Context, *CreateBlogRequest, *CreateBlogResponse) error
 }
 
 func RegisterBlogServiceHandler(s server.Server, hdlr BlogServiceHandler, opts ...server.HandlerOption) error {
 	type blogService interface {
-		Create(ctx context.Context, in *CreateBlogRequest, out *CreateBlogResponse) error
 	}
 	type BlogService struct {
 		blogService
@@ -86,8 +71,4 @@ func RegisterBlogServiceHandler(s server.Server, hdlr BlogServiceHandler, opts .
 
 type blogServiceHandler struct {
 	BlogServiceHandler
-}
-
-func (h *blogServiceHandler) Create(ctx context.Context, in *CreateBlogRequest, out *CreateBlogResponse) error {
-	return h.BlogServiceHandler.Create(ctx, in, out)
 }

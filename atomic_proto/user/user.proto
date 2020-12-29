@@ -107,7 +107,7 @@ message CreateCommonBlogRequest {
     // 文章内容
     repeated string content = 2;
     // 用户唯一标识
-    int64 user_id = 3;
+    string username = 3;
 }
 
 message CreateCommonBlogResponse {

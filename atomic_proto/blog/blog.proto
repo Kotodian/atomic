@@ -3,8 +3,6 @@ syntax = "proto3";
 package blog;
 
 
-import "atomic/atomic_proto/user/user.proto";
-import "atomic/atomic_proto/common/common.proto";
 
 /*
 在D盘下 protoc \
@@ -17,15 +15,16 @@ import "atomic/atomic_proto/common/common.proto";
 --govalidators_out=. atomic/atomic_proto/blog/blog.proto
 */
 service BlogService {
-  rpc Create(CreateBlogRequest) returns (CreateBlogResponse);
 }
 
-message CreateBlogRequest {
-    user.User user = 1;
-    string title = 2;
-    string content = 3;
-}
 
-message CreateBlogResponse {
-  common.Response res = 1;
+message CommonBlog {
+  // 唯一标识符
+  int64 id = 1;
+  // 博客标题
+  string title = 2;
+  // 文章内容
+  repeated string content = 3;
+  // 属于某个用户
+  string username = 4;
 }

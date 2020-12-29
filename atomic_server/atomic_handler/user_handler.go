@@ -1,6 +1,7 @@
 package atomic_handler
 
 import (
+	pbBlog "atomic/atomic_proto/blog"
 	"atomic/atomic_proto/common"
 	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_service"
@@ -12,7 +13,21 @@ type UserService struct {
 }
 
 func (u *UserService) CreateCommonBlog(ctx context.Context, req *pbUser.CreateCommonBlogRequest, resp *pbUser.CreateCommonBlogResponse) (err error) {
-	panic("implement me")
+	userModel := proto_model.User(&pbUser.User{
+		Username: req.Username,
+	})
+	blogModel := proto_model.CommonBlog(&pbBlog.CommonBlog{
+		Title:   req.Title,
+		Content: req.Content,
+	})
+	err = atomic_service.CreateBlog(ctx, userModel, blogModel)
+	if err != nil {
+		resp.Res = common.ServerErrResponse(err)
+		return
+	}
+
+	resp.Res = common.SuccessResponse(err)
+	return
 }
 
 func (u *UserService) Login(ctx context.Context, req *pbUser.LoginRequest, resp *pbUser.LoginResponse) (err error) {
@@ -25,7 +40,7 @@ func (u *UserService) Login(ctx context.Context, req *pbUser.LoginRequest, resp 
 	token, err := atomic_service.Login(ctx, m)
 
 	if err != nil {
-		resp.Res = common.SuccessResponse(err)
+		resp.Res = common.ServerErrResponse(err)
 		return
 	}
 

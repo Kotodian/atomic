@@ -11,8 +11,8 @@ import (
 type CommonBlog struct {
 	Id      int64  `gorm:"id"`
 	UserId  int64  `gorm:"user_id"`
-	title   string `gorm:"title"`
-	content string `gorm:"content"`
+	Title   string `gorm:"title"`
+	Content string `gorm:"content"`
 }
 
 const (

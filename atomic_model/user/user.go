@@ -15,9 +15,10 @@ type User struct {
 	Id       int64  `gorm:"id"`
 	Username string `gorm:"username"`
 	Password string `gorm:"password"`
-	Nickname string `gorm:"nickname" validate:"required"`
-	Email    string `gorm:"email" validate:"email"`
+	Nickname string `gorm:"nickname"`
+	Email    string `gorm:"email"`
 	Phone    string `gorm:"phone"`
+	Status   string `gorm:"-"`
 }
 
 const user = "users"
@@ -50,9 +51,13 @@ func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 func (u *User) CreateBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
 	tmp := &User{}
 
-	err := db.WithContext(ctx).Table(user).Where("id = ?", u.Id).First(&tmp).Error
+	err := db.WithContext(ctx).Table(user).Where("username = ?", u.Username).First(&tmp).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return atomic_error.ErrUserNotExists
+	}
+
+	if u.Status != Online {
+		return atomic_error.ErrUserNotOnline
 	}
 
 	err = blog.Insert(ctx, db, u.Id)
