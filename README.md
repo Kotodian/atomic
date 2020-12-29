@@ -1,6 +1,9 @@
 # atomic
 ## my blog
 
+## 项目介绍
+该项目采用了微服务的模式,用了go-micro作为内部服务的框架,gin作为http api的框架,jaeger以及opentracing
+作为链路追踪,mysql作为数据库,etcd作为注册中心。
 ### 整体架构
 ![img.png](整体架构.png)
 
