@@ -29,7 +29,7 @@ func UserServiceRegister(port int) {
 	opentracing.SetGlobalTracer(t)
 
 	reg := etcdv3.NewRegistry(
-		registry.Addrs(etcd.ETCD1, etcd.ETCD2, etcd.ETCD3),
+		registry.Addrs(etcd.Etcds...),
 	)
 
 	srv := micro.NewService(

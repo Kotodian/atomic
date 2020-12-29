@@ -18,7 +18,7 @@ import (
 func WebUser(engine *gin.Engine, port int) {
 
 	reg := etcdv3.NewRegistry(
-		registry.Addrs(etcd.ETCD1, etcd.ETCD2, etcd.ETCD3),
+		registry.Addrs(etcd.Etcds...),
 	)
 
 	srv := web.NewService(
