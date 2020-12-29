@@ -39,3 +39,17 @@ func Register(ctx context.Context, user *user.User) error {
 
 	return nil
 }
+
+func Update(ctx context.Context, user *user.User) error {
+	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
+	if err != nil {
+		return err
+	}
+
+	err = user.Update(ctx, db)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -41,6 +41,8 @@ type UserService interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
 	// 注册接口
 	Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
+	// 更新接口
+	Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error)
 }
 
 type userService struct {
@@ -81,6 +83,16 @@ func (c *userService) Register(ctx context.Context, in *RegisterRequest, opts ..
 	return out, nil
 }
 
+func (c *userService) Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error) {
+	req := c.c.NewRequest(c.name, "UserService.Update", in)
+	out := new(UpdateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for UserService service
 
 type UserServiceHandler interface {
@@ -88,12 +100,15 @@ type UserServiceHandler interface {
 	Login(context.Context, *LoginRequest, *LoginResponse) error
 	// 注册接口
 	Register(context.Context, *RegisterRequest, *RegisterResponse) error
+	// 更新接口
+	Update(context.Context, *UpdateRequest, *UpdateResponse) error
 }
 
 func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts ...server.HandlerOption) error {
 	type userService interface {
 		Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error
 		Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error
+		Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error
 	}
 	type UserService struct {
 		userService
@@ -112,4 +127,8 @@ func (h *userServiceHandler) Login(ctx context.Context, in *LoginRequest, out *L
 
 func (h *userServiceHandler) Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error {
 	return h.UserServiceHandler.Register(ctx, in, out)
+}
+
+func (h *userServiceHandler) Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error {
+	return h.UserServiceHandler.Update(ctx, in, out)
 }

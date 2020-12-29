@@ -63,3 +63,16 @@ func (u *User) Register(ctx context.Context, db *gorm.DB) error {
 	log.Info("注册成功", ctx)
 	return nil
 }
+
+func (u *User) Update(ctx context.Context, db *gorm.DB) error {
+	err := db.WithContext(ctx).Updates(u).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		log.Error(err, ctx)
+		return atomic_error.ErrUserNotExists
+	} else {
+		log.Error(err, ctx)
+		return atomic_error.ErrUpdate
+	}
+
+	return nil
+}

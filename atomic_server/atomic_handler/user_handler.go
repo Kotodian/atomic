@@ -2,7 +2,7 @@ package atomic_handler
 
 import (
 	"atomic/atomic_proto/common"
-	"atomic/atomic_proto/user"
+	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_service"
 	"atomic/internal/proto_model"
 	"context"
@@ -11,9 +11,9 @@ import (
 type UserService struct {
 }
 
-func (u *UserService) Login(ctx context.Context, req *user.LoginRequest, resp *user.LoginResponse) (err error) {
+func (u *UserService) Login(ctx context.Context, req *pbUser.LoginRequest, resp *pbUser.LoginResponse) (err error) {
 	// proto转换
-	m := proto_model.User(&user.User{
+	m := proto_model.User(&pbUser.User{
 		Username: req.Username,
 		Password: req.Password,
 	})
@@ -32,8 +32,8 @@ func (u *UserService) Login(ctx context.Context, req *user.LoginRequest, resp *u
 	return
 }
 
-func (u *UserService) Register(ctx context.Context, req *user.RegisterRequest, resp *user.RegisterResponse) (err error) {
-	m := proto_model.User(&user.User{
+func (u *UserService) Register(ctx context.Context, req *pbUser.RegisterRequest, resp *pbUser.RegisterResponse) (err error) {
+	m := proto_model.User(&pbUser.User{
 		Username: req.Username,
 		Password: req.Password,
 		Nickname: req.Nickname,
@@ -47,6 +47,26 @@ func (u *UserService) Register(ctx context.Context, req *user.RegisterRequest, r
 		resp.Res = common.ServerErrResponse(err)
 		return
 	}
+	resp.Res = common.SuccessResponse(err)
+
+	return
+}
+
+func (u *UserService) Update(ctx context.Context, req *pbUser.UpdateRequest, resp *pbUser.UpdateResponse) (err error) {
+	m := proto_model.User(&pbUser.User{
+		Nickname: req.Nickname,
+		Password: req.Password,
+		Email:    req.Email,
+		Phone:    req.Phone,
+	})
+
+	err = atomic_service.Update(ctx, m)
+
+	if err != nil {
+		resp.Res = common.ServerErrResponse(err)
+		return
+	}
+
 	resp.Res = common.SuccessResponse(err)
 
 	return

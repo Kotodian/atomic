@@ -6,7 +6,16 @@ package blog;
 import "atomic/atomic_proto/user/user.proto";
 import "atomic/atomic_proto/common/common.proto";
 
-// protoc --proto_path=. --go_out=. --micro_out=. atomic_server/proto/blog/blog.proto
+/*
+在D盘下 protoc \
+--proto_path=. \
+--proto_path=C:\Users\41735\go\pkg\mod\github.com \
+--go_out=.  \
+--micro_out=. \
+--doc_out=./atomic/atomic_doc \
+--doc_opt=markdown,atomic_blog.md \
+--govalidators_out=. atomic/atomic_proto/blog/blog.proto
+*/
 service BlogService {
   rpc Create(CreateBlogRequest) returns (CreateBlogResponse);
 }

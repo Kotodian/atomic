@@ -79,3 +79,20 @@ func (this *RegisterResponse) Validate() error {
 	}
 	return nil
 }
+func (this *UpdateRequest) Validate() error {
+	if !(len(this.Nickname) > 8) {
+		return github_com_mwitkow_go_proto_validators.FieldError("Nickname", fmt.Errorf(`value '%v' must have a length greater than '8'`, this.Nickname))
+	}
+	if !(len(this.Nickname) < 13) {
+		return github_com_mwitkow_go_proto_validators.FieldError("Nickname", fmt.Errorf(`value '%v' must have a length smaller than '13'`, this.Nickname))
+	}
+	return nil
+}
+func (this *UpdateResponse) Validate() error {
+	if this.Res != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.Res); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("Res", err)
+		}
+	}
+	return nil
+}
