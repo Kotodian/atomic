@@ -6,6 +6,7 @@ require (
 	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
+	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/protobuf v1.4.3
@@ -13,6 +14,7 @@ require (
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-plugins/registry/etcdv3 v0.0.0-20200119172437-4fe21aa238fd
 	github.com/micro/go-plugins/wrapper/trace/opentracing v0.0.0-20200119172437-4fe21aa238fd
+	github.com/micro/micro/v2 v2.9.3 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mwitkow/go-proto-validators v0.3.2
 	github.com/opentracing/opentracing-go v1.2.0

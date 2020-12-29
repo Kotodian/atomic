@@ -1,10 +1,11 @@
 package register
 
 import (
+	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_handler"
-	"atomic/atomic_server/proto/user"
 	"atomic/internal/etcd"
 	"atomic/internal/log"
+	"atomic/internal/service"
 	"atomic/internal/trace"
 	"fmt"
 	"github.com/micro/go-micro"
@@ -32,30 +33,21 @@ func UserServiceRegister(port int) {
 	)
 
 	srv := micro.NewService(
-		micro.Name(atomic_handler.GetUserServiceName()),
+		micro.Name(service.InnerUser),
 		micro.Address(fmt.Sprintf(":%d", port)),
 		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
 		micro.Registry(reg),
 	)
-
 	srv.Init()
-	userService := new(atomic_handler.UserService)
-	err = registerUser(srv, userService)
+
+	err = pbUser.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserService))
+
 	if err != nil {
 		log.Error(err)
 		return
 	}
 
-	if err := srv.Run(); err != nil {
+	if err = srv.Run(); err != nil {
 		panic(err)
 	}
-}
-
-func registerUser(srv micro.Service, atomicUser *atomic_handler.UserService) error {
-	err := user.RegisterUserServiceHandler(srv.Server(), atomicUser)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-	return nil
 }

@@ -16,19 +16,20 @@ limitations under the License.
 package cmd
 
 import (
-	"atomic/atomic_server/register"
+	"atomic/atomic_api"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 )
 
 var (
-	port          = 8090
-	insideService = "user"
+	apiPort    = 8089
+	webService = "user"
 )
 
-// serverCmd represents the server command
-var serverCmd = &cobra.Command{
-	Use:   "server",
-	Short: "启动分布式服务",
+// apiCmd represents the api command
+var apiCmd = &cobra.Command{
+	Use:   "api",
+	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -36,29 +37,25 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if insideService == "user" {
-			register.UserServiceRegister(port)
+		if webService == "user" {
+			e := gin.Default()
+			atomic_api.WebUser(e, apiPort)
 		}
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(serverCmd)
+	rootCmd.AddCommand(apiCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// apiCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	//serverCmd.Flags().StringP("",)
-
-	// 端口号
-	serverCmd.Flags().IntVarP(&port, "port", "p", 8090, "服务所占用的端口")
-	// 服务名
-	serverCmd.Flags().StringVarP(&insideService, "register", "r", "user", "所需要注册的服务")
-
+	// apiCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	apiCmd.Flags().IntVarP(&apiPort, "port", "p", 8089, "api端口")
+	apiCmd.Flags().StringVarP(&webService, "register", "r", "user", "服务名")
 }

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package common;
+
+option go_package = "atomic/atomic_proto/common";
+
+// 在 D:\ protoc --proto_path=. --proto_path=C:\Users\41735\go\pkg\mod\github.com --go_out=. --micro_out=. --govalidators_out=. atomic/atomic_proto/common/common.proto
+
+message Response {
+  int32 code = 1;
+  string msg = 2;
+}

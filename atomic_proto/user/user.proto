@@ -4,11 +4,10 @@ package user;
 
 import "google/protobuf/descriptor.proto";
 import "mwitkow/go-proto-validators@v0.3.2/validator.proto";
-import "common/common.proto";
-option go_package = "atomic/atomic_server/proto/user";
+import "atomic/atomic_proto/common/common.proto";
+option go_package = "atomic/atomic_proto/user";
 
-//protoc --proto_path=. --proto_path=D:\atomic\atomic_server\proto --proto_path=C:\Users\41735\go\pkg\mod\github.com --go_out=. --micro_out=. --govalidators_out=.  atomic/atomic_server/proto/user
-///user.proto
+// protoc --proto_path=. --proto_path=C:\Users\41735\go\pkg\mod\github.com --go_out=. --micro_out=. --govalidators_out=. atomic/atomic_proto/user/user.proto
 service UserService {
   // 登录接口
   rpc Login(LoginRequest) returns (LoginResponse);
@@ -33,8 +32,8 @@ message User {
 }
 
 message LoginRequest {
-  string username = 1 [(validator.field) = {length_gt:6, length_lt:12}];
-  string password = 2 [(validator.field) = {length_gt:6, length_lt:12}];
+  string username = 1 [(validator.field) = {length_gt:7, length_lt:13}];
+  string password = 2 [(validator.field) = {length_gt:7, length_lt:13}];
 }
 
 message LoginResponse {
@@ -42,9 +41,9 @@ message LoginResponse {
 }
 
 message RegisterRequest {
-    string username = 1 [(validator.field) = {length_gt:6, length_lt:12}];
-    string password = 2 [(validator.field) = {length_gt:6, length_lt:12}];
-    string nickname = 3 [(validator.field) = {length_gt:8, length_lt:12}];
+    string username = 1 [(validator.field) = {length_gt:7, length_lt:13}];
+    string password = 2 [(validator.field) = {length_gt:7, length_lt:13}];
+    string nickname = 3 [(validator.field) = {length_gt:8, length_lt:13}];
     string email = 4;
     string phone = 5 [(validator.field) = {length_gt:7, length_lt:12}];
 }

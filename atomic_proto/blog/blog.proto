@@ -3,8 +3,8 @@ syntax = "proto3";
 package blog;
 
 
-import "atomic_server/proto/user/user.proto";
-import "atomic_server/proto/common/common.proto";
+import "atomic/atomic_proto/user/user.proto";
+import "atomic/atomic_proto/common/common.proto";
 
 // protoc --proto_path=. --go_out=. --micro_out=. atomic_server/proto/blog/blog.proto
 service BlogService {

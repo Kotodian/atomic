@@ -3,6 +3,7 @@ package user
 import (
 	"atomic/atomic_model"
 	"atomic/internal/atomic_error"
+	"atomic/internal/encrypt"
 	"atomic/internal/log"
 	"context"
 	"errors"
@@ -19,7 +20,7 @@ type User struct {
 	Phone    string `gorm:"phone"`
 }
 
-const user = "user"
+const user = "users"
 
 func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 	tmp := &User{}
@@ -27,14 +28,14 @@ func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 	err := db.WithContext(ctx).Table(user).Where("username = ?", u.Username).First(&tmp).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return atomic_error.UserNotExists
+		return atomic_error.ErrUserNotExists
 	}
 
 	if tmp.Password != u.Password {
-		log.Error(atomic_error.PasswordWrong, ctx)
-		return atomic_error.PasswordWrong
+		log.Error(atomic_error.ErrPasswordWrong, ctx)
+		return atomic_error.ErrPasswordWrong
 	}
-
+	log.Info("登录成功", ctx)
 	return nil
 }
 
@@ -51,10 +52,12 @@ func (u *User) CollectBlog(ctx context.Context, db *gorm.DB, blog atomic_model.B
 }
 
 func (u *User) Register(ctx context.Context, db *gorm.DB) error {
+	u.Password = encrypt.MD5(u.Password)
 	err := db.WithContext(ctx).Table(user).Create(u).Error
 	if err != nil {
 		log.Error(err, ctx)
 		return atomic_error.ErrUserCreate
 	}
+	log.Info("注册成功", ctx)
 	return nil
 }
