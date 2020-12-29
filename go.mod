@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
@@ -18,6 +19,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mwitkow/go-proto-validators v0.3.2
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/pseudomuto/protoc-gen-doc v1.3.2 // indirect
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.0
 	github.com/uber/jaeger-client-go v2.25.0+incompatible

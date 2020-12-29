@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"atomic/atomic_api"
+	"atomic/atomic_api/controller"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 )
@@ -39,7 +39,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if webService == "user" {
 			e := gin.Default()
-			atomic_api.WebUser(e, apiPort)
+			controller.WebUser(e, apiPort)
 		}
 	},
 }

@@ -18,14 +18,16 @@ func (u *UserService) Login(ctx context.Context, req *user.LoginRequest, resp *u
 		Password: req.Password,
 	})
 
-	err = atomic_service.Login(ctx, m)
+	token, err := atomic_service.Login(ctx, m)
 
 	if err != nil {
 		resp.Res = common.SuccessResponse(err)
 		return
 	}
 
+	// 返回token
 	resp.Res = common.SuccessResponse(err)
+	resp.Token = token
 
 	return
 }

@@ -1,4 +1,4 @@
-package atomic_api
+package controller
 
 import (
 	pbUser "atomic/atomic_proto/user"
@@ -10,6 +10,7 @@ import (
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/web"
 	"github.com/micro/go-plugins/registry/etcdv3"
+	"net/http"
 )
 
 // web api
@@ -34,30 +35,30 @@ func WebUser(engine *gin.Engine, port int) {
 			req := &pbUser.LoginRequest{}
 			err := ctx.ShouldBindJSON(req)
 			if err != nil {
-				ctx.JSON(400, nil)
+				ctx.JSON(http.StatusBadRequest, err)
 				return
 			}
 			response, err := cli.Login(ctx, req)
 			if err != nil {
-				ctx.JSON(500, err)
+				ctx.JSON(http.StatusInternalServerError, err)
 				return
 			}
-			ctx.JSON(200, response)
+			ctx.JSON(http.StatusOK, response)
 		})
 
 		routerUser.POST("/register", func(ctx *gin.Context) {
 			req := &pbUser.RegisterRequest{}
 			err := ctx.ShouldBindJSON(req)
 			if err != nil {
-				ctx.JSON(400, nil)
+				ctx.JSON(http.StatusBadRequest, err)
 				return
 			}
 			response, err := cli.Register(ctx, req)
 			if err != nil {
-				ctx.JSON(500, err)
+				ctx.JSON(http.StatusInternalServerError, err)
 				return
 			}
-			ctx.JSON(200, response)
+			ctx.JSON(http.StatusOK, response)
 		})
 	}
 	err := srv.Init()

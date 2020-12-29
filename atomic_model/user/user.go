@@ -31,11 +31,13 @@ func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 		return atomic_error.ErrUserNotExists
 	}
 
-	if tmp.Password != u.Password {
+	if encrypt.MD5(tmp.Password) != u.Password {
 		log.Error(atomic_error.ErrPasswordWrong, ctx)
 		return atomic_error.ErrPasswordWrong
 	}
+
 	log.Info("登录成功", ctx)
+
 	return nil
 }
 

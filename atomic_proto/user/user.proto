@@ -7,7 +7,16 @@ import "mwitkow/go-proto-validators@v0.3.2/validator.proto";
 import "atomic/atomic_proto/common/common.proto";
 option go_package = "atomic/atomic_proto/user";
 
-// protoc --proto_path=. --proto_path=C:\Users\41735\go\pkg\mod\github.com --go_out=. --micro_out=. --govalidators_out=. atomic/atomic_proto/user/user.proto
+/*
+在D盘下 protoc \
+--proto_path=. \
+--proto_path=C:\Users\41735\go\pkg\mod\github.com \
+--go_out=.  \
+--micro_out=. \
+--doc_out=./atomic/doc \
+--doc_opt=markdown,atomic.md \
+--govalidators_out=. atomic/atomic_proto/user/user.proto
+*/
 service UserService {
   // 登录接口
   rpc Login(LoginRequest) returns (LoginResponse);
@@ -32,19 +41,29 @@ message User {
 }
 
 message LoginRequest {
+  // 用户名
   string username = 1 [(validator.field) = {length_gt:7, length_lt:13}];
+  // 密码
   string password = 2 [(validator.field) = {length_gt:7, length_lt:13}];
 }
 
 message LoginResponse {
+  // 基本返回信息
   common.Response res = 1;
+  // 用户token
+  string token = 2;
 }
 
 message RegisterRequest {
+    // 用户名 长度必须大于7位小于13位
     string username = 1 [(validator.field) = {length_gt:7, length_lt:13}];
+    // 密码 长度必须大于7位小于13位
     string password = 2 [(validator.field) = {length_gt:7, length_lt:13}];
+    // 别名 长度必须大于8位小于13位
     string nickname = 3 [(validator.field) = {length_gt:8, length_lt:13}];
+    // 邮箱
     string email = 4;
+    // 手机号码或者电话号码
     string phone = 5 [(validator.field) = {length_gt:7, length_lt:12}];
 }
 

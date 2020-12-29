@@ -1,4 +1,4 @@
-package atomic_api
+package controller
 
 import (
 	"github.com/gin-gonic/gin"
