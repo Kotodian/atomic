@@ -19,7 +19,7 @@ func UserServiceRegister(port int) {
 	log.Debug("注册用户服务")
 
 	// jaeger
-	t, io, err := trace.NewTracer(atomic_handler.GetUserServiceName(), trace.JaegerAddr)
+	t, io, err := trace.NewTracer(service.InnerUser, trace.JaegerAddr)
 	if err != nil {
 		log.Error(err)
 		return

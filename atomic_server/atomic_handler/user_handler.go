@@ -11,10 +11,6 @@ import (
 type UserService struct {
 }
 
-func GetUserServiceName() string {
-	return "go.srv.user"
-}
-
 func (u *UserService) Login(ctx context.Context, req *user.LoginRequest, resp *user.LoginResponse) (err error) {
 	// proto转换
 	m := proto_model.User(&user.User{
