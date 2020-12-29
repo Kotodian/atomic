@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-func NewClient(ctx context.Context, url string, timeout time.Duration) (*clientv3.Client, error) {
+func NewClient(ctx context.Context, timeout time.Duration) (*clientv3.Client, error) {
 	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   []string{url},
+		Endpoints:   Etcds,
 		DialTimeout: timeout,
 	})
 
@@ -35,16 +35,24 @@ func Get(ctx context.Context, client *clientv3.Client, key string) ([]byte, erro
 }
 
 func Put(ctx context.Context, client *clientv3.Client, key string, value string, timeout int64) error {
-	lease, err := client.Grant(ctx, timeout)
-	if err != nil {
-		log.Error(err, ctx)
-		return err
-	}
+	if timeout > 0 {
+		lease, err := client.Grant(ctx, timeout)
+		if err != nil {
+			log.Error(err, ctx)
+			return err
+		}
 
-	_, err = client.Put(ctx, key, value, clientv3.WithLease(lease.ID))
-	if err != nil {
-		log.Error(err, ctx)
-		return err
+		_, err = client.Put(ctx, key, value, clientv3.WithLease(lease.ID))
+		if err != nil {
+			log.Error(err, ctx)
+			return err
+		}
+	} else {
+		_, err := client.Put(ctx, key, value)
+		if err != nil {
+			log.Error(err, ctx)
+			return err
+		}
 	}
 	return nil
 }

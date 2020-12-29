@@ -27,6 +27,15 @@ service UserService {
 }
 
 
+enum Status {
+  // 离线
+  offline = 0;
+  // 在线
+  online = 1;
+  // 被禁用
+  disabled = 2;
+}
+
 message User {
   // userId 唯一标识
   int64 id = 1;

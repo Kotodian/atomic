@@ -22,6 +22,12 @@ type User struct {
 
 const user = "users"
 
+const (
+	Offline  = "offline"
+	Online   = "online"
+	Disabled = "disabled"
+)
+
 func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 	tmp := &User{}
 
