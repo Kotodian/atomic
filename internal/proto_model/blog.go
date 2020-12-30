@@ -7,10 +7,10 @@ import (
 
 func CommonBlog(pbBlog *proto.CommonBlog) *blog.CommonBlog {
 	return &blog.CommonBlog{
-		Id:      pbBlog.Id,
-		UserId:  pbBlog.UserId,
-		Title:   pbBlog.Title,
-		Content: protoBlogContentToModelContent(pbBlog.Content),
+		Id:       pbBlog.Id,
+		Username: pbBlog.Username,
+		Title:    pbBlog.Title,
+		Content:  protoBlogContentToModelContent(pbBlog.Content),
 	}
 }
 

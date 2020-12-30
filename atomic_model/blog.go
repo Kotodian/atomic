@@ -14,8 +14,8 @@ type Blog interface {
 	HasNode(context.Context, *gorm.DB) bool
 	// 创建节点
 	CreateNode(context.Context, *gorm.DB, Node) error
-	// 插入 int64是用户id
-	Insert(context.Context, *gorm.DB, int64) error
+	// 插入 string是用户名
+	Insert(context.Context, *gorm.DB, string) error
 	// 更新
 	Update(context.Context, *gorm.DB) error
 	// 删除

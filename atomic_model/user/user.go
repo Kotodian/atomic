@@ -60,7 +60,7 @@ func (u *User) CreateBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Bl
 		return atomic_error.ErrUserNotOnline
 	}
 
-	err = blog.Insert(ctx, db, u.Id)
+	err = blog.Insert(ctx, db, u.Username)
 	if err != nil {
 		return err
 	}
