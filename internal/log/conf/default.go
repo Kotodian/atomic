@@ -63,7 +63,7 @@ var AllLevels = []Level{
 }
 
 const (
-	LogPath     = "/atomic/log"
+	LogPath     = "/atomic/atomic_log"
 	LogName     = "atomic_log"
 	LogLevel    = "debug"
 	MaxSize     = 100
