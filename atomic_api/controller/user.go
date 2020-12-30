@@ -34,6 +34,7 @@ func WebUser(engine *gin.Engine, port int) {
 		micro.Registry(reg),
 		micro.WrapClient(hystrix.NewClientWrapper()),
 	).Client()
+
 	cliService := pbUser.NewUserService(service.InnerUser, client)
 
 	routerUser := engine.Group("user")

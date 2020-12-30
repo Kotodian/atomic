@@ -4,12 +4,15 @@ import (
 	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_handler"
 	"atomic/internal/etcd"
+	"atomic/internal/kafka_msg"
 	"atomic/internal/log"
 	"atomic/internal/service"
 	"atomic/internal/trace"
 	"fmt"
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/broker"
 	"github.com/micro/go-micro/registry"
+	"github.com/micro/go-plugins/broker/kafka"
 	"github.com/micro/go-plugins/registry/etcdv3"
 	limmiter "github.com/micro/go-plugins/wrapper/ratelimiter/uber"
 	wrapperTrace "github.com/micro/go-plugins/wrapper/trace/opentracing"
@@ -39,13 +42,20 @@ func UserServiceRegister(port int) {
 		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
 		micro.WrapHandler(limmiter.NewHandlerWrapper(100)),
 		micro.Registry(reg),
+		micro.Broker(kafka.NewBroker(func(opt *broker.Options) {
+			opt.Addrs = kafka_msg.URL
+		})),
 	)
 	srv.Init()
 
 	err = pbUser.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserService))
 
 	if err != nil {
-		log.Error(err)
+		return
+	}
+
+	err = broker.Connect()
+	if err != nil {
 		return
 	}
 
