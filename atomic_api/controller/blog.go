@@ -35,7 +35,7 @@ func WebBlog(engine *gin.Engine, port int) {
 		micro.WrapClient(hystrix.NewClientWrapper()),
 	).Client()
 
-	cliService := pbBlog.NewCommonBlogService(service.InnerBlog, client)
+	cliService := pbBlog.NewBlogService(service.InnerBlog, client)
 
 	routerBlog := engine.Group("blog").Use(middleware.JWTAuthMiddleware())
 	// 用户创建博客api接口

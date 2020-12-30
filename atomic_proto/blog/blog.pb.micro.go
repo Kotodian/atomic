@@ -32,35 +32,35 @@ var _ context.Context
 var _ client.Option
 var _ server.Option
 
-// Client API for CommonBlogService service
+// Client API for BlogService service
 
-type CommonBlogService interface {
+type BlogService interface {
 	// 创建
 	Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error)
 	// 删除
 	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
 }
 
-type commonBlogService struct {
+type blogService struct {
 	c    client.Client
 	name string
 }
 
-func NewCommonBlogService(name string, c client.Client) CommonBlogService {
+func NewBlogService(name string, c client.Client) BlogService {
 	if c == nil {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
 		name = "blog"
 	}
-	return &commonBlogService{
+	return &blogService{
 		c:    c,
 		name: name,
 	}
 }
 
-func (c *commonBlogService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
-	req := c.c.NewRequest(c.name, "CommonBlogService.Create", in)
+func (c *blogService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
+	req := c.c.NewRequest(c.name, "BlogService.Create", in)
 	out := new(CreateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -69,8 +69,8 @@ func (c *commonBlogService) Create(ctx context.Context, in *CreateRequest, opts 
 	return out, nil
 }
 
-func (c *commonBlogService) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
-	req := c.c.NewRequest(c.name, "CommonBlogService.Delete", in)
+func (c *blogService) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
+	req := c.c.NewRequest(c.name, "BlogService.Delete", in)
 	out := new(DeleteResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -79,35 +79,35 @@ func (c *commonBlogService) Delete(ctx context.Context, in *DeleteRequest, opts 
 	return out, nil
 }
 
-// Server API for CommonBlogService service
+// Server API for BlogService service
 
-type CommonBlogServiceHandler interface {
+type BlogServiceHandler interface {
 	// 创建
 	Create(context.Context, *CreateRequest, *CreateResponse) error
 	// 删除
 	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
 }
 
-func RegisterCommonBlogServiceHandler(s server.Server, hdlr CommonBlogServiceHandler, opts ...server.HandlerOption) error {
-	type commonBlogService interface {
+func RegisterBlogServiceHandler(s server.Server, hdlr BlogServiceHandler, opts ...server.HandlerOption) error {
+	type blogService interface {
 		Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error
 		Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
 	}
-	type CommonBlogService struct {
-		commonBlogService
+	type BlogService struct {
+		blogService
 	}
-	h := &commonBlogServiceHandler{hdlr}
-	return s.Handle(s.NewHandler(&CommonBlogService{h}, opts...))
+	h := &blogServiceHandler{hdlr}
+	return s.Handle(s.NewHandler(&BlogService{h}, opts...))
 }
 
-type commonBlogServiceHandler struct {
-	CommonBlogServiceHandler
+type blogServiceHandler struct {
+	BlogServiceHandler
 }
 
-func (h *commonBlogServiceHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
-	return h.CommonBlogServiceHandler.Create(ctx, in, out)
+func (h *blogServiceHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
+	return h.BlogServiceHandler.Create(ctx, in, out)
 }
 
-func (h *commonBlogServiceHandler) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
-	return h.CommonBlogServiceHandler.Delete(ctx, in, out)
+func (h *blogServiceHandler) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
+	return h.BlogServiceHandler.Delete(ctx, in, out)
 }

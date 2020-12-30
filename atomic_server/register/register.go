@@ -24,62 +24,47 @@ import (
 func UserServiceRegister(port int) {
 	log.Debug("注册用户服务")
 
-	// jaeger
-	t, io, err := trace.NewTracer(service.InnerUser, trace.JaegerAddr)
+	srv := register(port, service.InnerUser)
+
+	err := pbUser.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserHandler))
+
 	if err != nil {
-		log.Error(err)
 		return
 	}
-	defer io.Close()
 
-	opentracing.SetGlobalTracer(t)
-
-	reg := etcdv3.NewRegistry(
-		registry.Addrs(etcd.Etcds...),
-	)
-
-	srv := micro.NewService(
-		micro.Name(service.InnerUser),
-		micro.Address(fmt.Sprintf(":%d", port)),
-		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
-		micro.WrapHandler(limmiter.NewHandlerWrapper(100)),
-		micro.Registry(reg),
-		micro.Broker(kafka.NewBroker(func(opt *broker.Options) {
-			opt.Addrs = kafka_msg.URL
-		})),
-	)
-
-	afterStart := func() error {
-		brk := srv.Options().Broker
-		if err := brk.Connect(); err != nil {
-			log.Fatal(atomic_error.ErrBrokerConnect.Error())
-			return err
+	if srv != nil {
+		if err = srv.Run(); err != nil {
+			panic(err)
 		}
-		return nil
-	}
-
-	srv.Init(
-		micro.AfterStart(afterStart),
-	)
-
-	err = pbUser.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserHandler))
-
-	if err != nil {
-		return
-	}
-	if err = srv.Run(); err != nil {
-		panic(err)
 	}
 }
 
 func BlogServiceRegistry(port int) {
 	log.Debug("注册博客服务")
 
+	srv := register(port, service.InnerBlog)
+
+	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), new(atomic_handler.BlogHandler))
+
+	if err != nil {
+		return
+	}
+
+	if srv != nil {
+		if err = srv.Run(); err != nil {
+			panic(err)
+		}
+	}
+
+}
+
+func register(port int, srvName string) micro.Service {
+
 	// jaeger
-	t, io, err := trace.NewTracer(service.InnerBlog, trace.JaegerAddr)
+	t, io, err := trace.NewTracer(srvName, trace.JaegerAddr)
 	if err != nil {
 		log.Error(err)
-		return
+		return nil
 	}
 	defer io.Close()
 
@@ -90,7 +75,7 @@ func BlogServiceRegistry(port int) {
 	)
 
 	srv := micro.NewService(
-		micro.Name(service.InnerBlog),
+		micro.Name(srvName),
 		micro.Address(fmt.Sprintf(":%d", port)),
 		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
 		micro.WrapHandler(limmiter.NewHandlerWrapper(100)),
@@ -112,13 +97,5 @@ func BlogServiceRegistry(port int) {
 	srv.Init(
 		micro.AfterStart(afterStart),
 	)
-
-	err = pbBlog.RegisterCommonBlogServiceHandler(srv.Server(), new(atomic_handler.BlogHandler))
-
-	if err != nil {
-		return
-	}
-	if err = srv.Run(); err != nil {
-		panic(err)
-	}
+	return srv
 }

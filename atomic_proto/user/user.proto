@@ -7,17 +7,9 @@ import "atomic/atomic_proto/common/common.proto";
 option go_package = "atomic/atomic_proto/user";
 
 /*
-在D盘下 protoc \
---proto_path=. \
---proto_path=C:\Users\41735\go\pkg\mod\github.com \
---go_out=.  \
---micro_out=. \
---doc_out=./atomic/atomic_doc \
---doc_opt=markdown,atomic_user.md \
-atomic/atomic_proto/user/user.proto
+在D盘下 protoc --proto_path=. --go_out=. --micro_out=. --doc_out=./atomic/atomic_doc --doc_opt=markdown,atomic_user.md atomic/atomic_proto/user/user.proto
+protoc-go-inject-tag -input=./atomic/atomic_proto/user/user.pb.go
 */
-
-// protoc-go-inject-tag -input=./atomic/atomic_proto/user/user.pb.go
 service UserService {
   // 登录接口
   rpc Login(LoginRequest) returns (LoginResponse);

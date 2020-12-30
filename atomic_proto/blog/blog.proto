@@ -5,19 +5,14 @@ package blog;
 
 
 /*
-在D盘下 protoc \
---proto_path=. \
---proto_path=C:\Users\41735\go\pkg\mod\github.com \
---go_out=.  \
---micro_out=. \
---doc_out=./atomic/atomic_doc \
---doc_opt=markdown,atomic_blog.md \
-atomic/atomic_proto/blog/blog.proto
+在D盘下 protoc --proto_path=. --go_out=. --micro_out=. --doc_out=./atomic/atomic_doc --doc_opt=markdown,atomic_blog.md atomic/atomic_proto/blog/blog.proto
+protoc-go-inject-tag -input=./atomic/atomic_proto/blog/blog.pb.go
 */
+
 import "atomic/atomic_proto/common/common.proto";
 
 // 最简易的博客
-service CommonBlogService {
+service BlogService {
   // 创建
   rpc Create(CreateRequest) returns (CreateResponse);
   // 删除
