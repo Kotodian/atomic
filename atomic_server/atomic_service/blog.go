@@ -33,3 +33,16 @@ func CreateBlog(ctx context.Context, user *user.User, blog atomic_model.Blog) er
 	}
 	return nil
 }
+
+func DeleteBlog(ctx context.Context, blog atomic_model.Blog) error {
+	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
+	if err != nil {
+		return err
+	}
+
+	err = blog.Delete(ctx, db)
+	if err != nil {
+		return err
+	}
+	return nil
+}

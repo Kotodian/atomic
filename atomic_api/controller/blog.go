@@ -60,6 +60,28 @@ func WebBlog(engine *gin.Engine, port int) {
 		}
 		ctx.JSON(http.StatusOK, response)
 	})
+	// 用户删除博客api接口
+	routerBlog.POST("/delete", func(ctx *gin.Context) {
+		req := &pbBlog.DeleteRequest{}
+		err := ctx.ShouldBindJSON(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+
+		err = validator.New().Struct(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+
+		response, err := cliService.Delete(ctx, req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, response)
+	})
 
 	err := srv.Init()
 	if err != nil {

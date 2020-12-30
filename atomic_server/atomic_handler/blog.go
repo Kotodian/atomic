@@ -12,8 +12,20 @@ import (
 type BlogHandler struct {
 }
 
-func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.DeleteRequest, resp *pbBlog.DeleteResponse) error {
-	panic("implement me")
+func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.DeleteRequest, resp *pbBlog.DeleteResponse) (err error) {
+	blogModel := proto_model.CommonBlog(&pbBlog.CommonBlog{
+		Id: req.BlogId,
+	})
+
+	err = atomic_service.DeleteBlog(ctx, blogModel)
+	if err != nil {
+		resp.Res = common.ServerErrResponse(err)
+		return
+	}
+
+	resp.Res = common.SuccessResponse(err)
+	return
+
 }
 
 func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.CreateRequest, resp *pbBlog.CreateResponse) (err error) {
