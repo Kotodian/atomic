@@ -45,6 +45,8 @@ type UserService interface {
 	Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error)
 	// 创建一个最简单的博客
 	CreateCommonBlog(ctx context.Context, in *CreateCommonBlogRequest, opts ...client.CallOption) (*CreateCommonBlogResponse, error)
+	// 登出接口
+	Logout(ctx context.Context, in *LogoutRequest, opts ...client.CallOption) (*LogoutResponse, error)
 }
 
 type userService struct {
@@ -105,6 +107,16 @@ func (c *userService) CreateCommonBlog(ctx context.Context, in *CreateCommonBlog
 	return out, nil
 }
 
+func (c *userService) Logout(ctx context.Context, in *LogoutRequest, opts ...client.CallOption) (*LogoutResponse, error) {
+	req := c.c.NewRequest(c.name, "UserService.Logout", in)
+	out := new(LogoutResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for UserService service
 
 type UserServiceHandler interface {
@@ -116,6 +128,8 @@ type UserServiceHandler interface {
 	Update(context.Context, *UpdateRequest, *UpdateResponse) error
 	// 创建一个最简单的博客
 	CreateCommonBlog(context.Context, *CreateCommonBlogRequest, *CreateCommonBlogResponse) error
+	// 登出接口
+	Logout(context.Context, *LogoutRequest, *LogoutResponse) error
 }
 
 func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts ...server.HandlerOption) error {
@@ -124,6 +138,7 @@ func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts .
 		Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error
 		Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error
 		CreateCommonBlog(ctx context.Context, in *CreateCommonBlogRequest, out *CreateCommonBlogResponse) error
+		Logout(ctx context.Context, in *LogoutRequest, out *LogoutResponse) error
 	}
 	type UserService struct {
 		userService
@@ -150,4 +165,8 @@ func (h *userServiceHandler) Update(ctx context.Context, in *UpdateRequest, out 
 
 func (h *userServiceHandler) CreateCommonBlog(ctx context.Context, in *CreateCommonBlogRequest, out *CreateCommonBlogResponse) error {
 	return h.UserServiceHandler.CreateCommonBlog(ctx, in, out)
+}
+
+func (h *userServiceHandler) Logout(ctx context.Context, in *LogoutRequest, out *LogoutResponse) error {
+	return h.UserServiceHandler.Logout(ctx, in, out)
 }

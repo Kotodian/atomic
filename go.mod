@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
-	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
+	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dustin/go-humanize v1.0.0 // indirect
@@ -20,7 +20,7 @@ require (
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-plugins/registry/etcdv3 v0.0.0-20200119172437-4fe21aa238fd
 	github.com/micro/go-plugins/wrapper/breaker/hystrix v0.0.0-20200119172437-4fe21aa238fd
-	github.com/micro/go-plugins/wrapper/ratelimiter/uber v0.0.0-20200119172437-4fe21aa238fd // indirect
+	github.com/micro/go-plugins/wrapper/ratelimiter/uber v0.0.0-20200119172437-4fe21aa238fd
 	github.com/micro/go-plugins/wrapper/trace/opentracing v0.0.0-20200119172437-4fe21aa238fd
 	github.com/miekg/dns v1.1.27 // indirect
 	github.com/mwitkow/go-proto-validators v0.3.2

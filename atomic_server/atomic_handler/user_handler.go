@@ -90,3 +90,7 @@ func (u *UserService) Update(ctx context.Context, req *pbUser.UpdateRequest, res
 
 	return
 }
+
+func (u *UserService) Logout(ctx context.Context, req *pbUser.LogoutRequest, resp *pbUser.LogoutResponse) (err error) {
+	panic("implement me")
+}

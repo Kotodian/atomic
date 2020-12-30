@@ -26,6 +26,8 @@ service UserService {
   rpc Update(UpdateRequest) returns (UpdateResponse);
   // 创建一个最简单的博客
   rpc CreateCommonBlog(CreateCommonBlogRequest) returns (CreateCommonBlogResponse);
+  // 登出接口
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
 }
 
 
@@ -113,4 +115,14 @@ message CreateCommonBlogRequest {
 message CreateCommonBlogResponse {
   // 基本返回信息
   common.Response res = 1;
+}
+
+message LogoutRequest {
+  // 用户唯一标识
+  int64 id = 1;
+  string username = 2;
+}
+
+message LogoutResponse {
+  common.Response res = 2;
 }

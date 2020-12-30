@@ -9,10 +9,10 @@ import (
 )
 
 type CommonBlog struct {
-	Id      int64  `gorm:"id"`
-	UserId  int64  `gorm:"user_id"`
-	Title   string `gorm:"title"`
-	Content string `gorm:"content"`
+	Id       int64  `gorm:"id"`
+	Username string `gorm:"username"`
+	Title    string `gorm:"title"`
+	Content  string `gorm:"type:longtext;content"`
 }
 
 const (
@@ -43,8 +43,8 @@ func (c *CommonBlog) CreateNode(ctx context.Context, db *gorm.DB, node atomic_mo
 	panic("implement me")
 }
 
-func (c *CommonBlog) Insert(ctx context.Context, db *gorm.DB, userid int64) error {
-	c.UserId = userid
+func (c *CommonBlog) Insert(ctx context.Context, db *gorm.DB, username string) error {
+	c.Username = username
 	err := db.WithContext(ctx).Create(c).Error
 	if err != nil {
 		log.Error(err)
