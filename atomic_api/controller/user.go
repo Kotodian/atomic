@@ -7,6 +7,7 @@ import (
 	"atomic/internal/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/web"
@@ -46,6 +47,14 @@ func WebUser(engine *gin.Engine, port int) {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
+
+		err = validator.New().Struct(&req)
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+
 		response, err := cliService.Login(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
@@ -61,6 +70,13 @@ func WebUser(engine *gin.Engine, port int) {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
+
+		err = validator.New().Struct(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+
 		response, err := cliService.Register(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
@@ -79,6 +95,13 @@ func WebUser(engine *gin.Engine, port int) {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
+
+		err = validator.New().Struct(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+
 		response, err := cliService.Update(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
@@ -94,6 +117,13 @@ func WebUser(engine *gin.Engine, port int) {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
+
+		err = validator.New().Struct(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+
 		response, err := cliService.CreateCommonBlog(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
