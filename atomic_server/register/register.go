@@ -1,6 +1,7 @@
 package register
 
 import (
+	pbBlog "atomic/atomic_proto/blog"
 	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_handler"
 	"atomic/internal/atomic_error"
@@ -61,13 +62,59 @@ func UserServiceRegister(port int) {
 		micro.AfterStart(afterStart),
 	)
 
-	err = pbUser.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserService))
+	err = pbUser.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserHandler))
 
 	if err != nil {
 		return
 	}
-	//todo: 将通知消息写入消息队列
-	err = broker.Connect()
+	if err = srv.Run(); err != nil {
+		panic(err)
+	}
+}
+
+func BlogServiceRegistry(port int) {
+	log.Debug("注册博客服务")
+
+	// jaeger
+	t, io, err := trace.NewTracer(service.InnerBlog, trace.JaegerAddr)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	defer io.Close()
+
+	opentracing.SetGlobalTracer(t)
+
+	reg := etcdv3.NewRegistry(
+		registry.Addrs(etcd.Etcds...),
+	)
+
+	srv := micro.NewService(
+		micro.Name(service.InnerBlog),
+		micro.Address(fmt.Sprintf(":%d", port)),
+		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
+		micro.WrapHandler(limmiter.NewHandlerWrapper(100)),
+		micro.Registry(reg),
+		micro.Broker(kafka.NewBroker(func(opt *broker.Options) {
+			opt.Addrs = kafka_msg.URL
+		})),
+	)
+
+	afterStart := func() error {
+		brk := srv.Options().Broker
+		if err := brk.Connect(); err != nil {
+			log.Fatal(atomic_error.ErrBrokerConnect.Error())
+			return err
+		}
+		return nil
+	}
+
+	srv.Init(
+		micro.AfterStart(afterStart),
+	)
+
+	err = pbBlog.RegisterCommonBlogServiceHandler(srv.Server(), new(atomic_handler.BlogHandler))
+
 	if err != nil {
 		return
 	}

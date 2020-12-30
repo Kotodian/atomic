@@ -12,10 +12,6 @@ type User interface {
 	Update(context.Context, *gorm.DB) error
 	// 获取别名
 	NickName(context.Context, *gorm.DB) (string, error)
-	// 创建博客
-	CreateBlog(context.Context, *gorm.DB, Blog) error
-	// 删除博客
-	DeleteBlog(context.Context, *gorm.DB, Blog) error
 	// 收藏博客
 	CollectBlog(context.Context, *gorm.DB, Blog) error
 }

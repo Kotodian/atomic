@@ -4,6 +4,7 @@
 package blog
 
 import (
+	common "atomic/atomic_proto/common"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
@@ -19,6 +20,107 @@ var _ = math.Inf
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
+
+type CreateRequest struct {
+	// 标题 6到10个字之内
+	// @inject_tag: validate:"required,max=11,min=8"
+	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty" validate:"required,max=11,min=8"`
+	// 文章内容
+	// @inject_tag: validate:"required"
+	Content []string `protobuf:"bytes,2,rep,name=content,proto3" json:"content,omitempty" validate:"required"`
+	// 用户唯一标识
+	// @inject_tag: validate:"required,max=12,min=7"
+	Username             string   `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty" validate:"required,max=12,min=7"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateRequest) Reset()         { *m = CreateRequest{} }
+func (m *CreateRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateRequest) ProtoMessage()    {}
+func (*CreateRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_92db37cf00cb4a6f, []int{0}
+}
+
+func (m *CreateRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateRequest.Unmarshal(m, b)
+}
+func (m *CreateRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateRequest.Merge(m, src)
+}
+func (m *CreateRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateRequest.Size(m)
+}
+func (m *CreateRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateRequest proto.InternalMessageInfo
+
+func (m *CreateRequest) GetTitle() string {
+	if m != nil {
+		return m.Title
+	}
+	return ""
+}
+
+func (m *CreateRequest) GetContent() []string {
+	if m != nil {
+		return m.Content
+	}
+	return nil
+}
+
+func (m *CreateRequest) GetUsername() string {
+	if m != nil {
+		return m.Username
+	}
+	return ""
+}
+
+type CreateResponse struct {
+	// 基本返回信息
+	Res                  *common.Response `protobuf:"bytes,1,opt,name=res,proto3" json:"res,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *CreateResponse) Reset()         { *m = CreateResponse{} }
+func (m *CreateResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateResponse) ProtoMessage()    {}
+func (*CreateResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_92db37cf00cb4a6f, []int{1}
+}
+
+func (m *CreateResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateResponse.Unmarshal(m, b)
+}
+func (m *CreateResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateResponse.Marshal(b, m, deterministic)
+}
+func (m *CreateResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateResponse.Merge(m, src)
+}
+func (m *CreateResponse) XXX_Size() int {
+	return xxx_messageInfo_CreateResponse.Size(m)
+}
+func (m *CreateResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateResponse proto.InternalMessageInfo
+
+func (m *CreateResponse) GetRes() *common.Response {
+	if m != nil {
+		return m.Res
+	}
+	return nil
+}
 
 type CommonBlog struct {
 	// 唯一标识符
@@ -38,7 +140,7 @@ func (m *CommonBlog) Reset()         { *m = CommonBlog{} }
 func (m *CommonBlog) String() string { return proto.CompactTextString(m) }
 func (*CommonBlog) ProtoMessage()    {}
 func (*CommonBlog) Descriptor() ([]byte, []int) {
-	return fileDescriptor_92db37cf00cb4a6f, []int{0}
+	return fileDescriptor_92db37cf00cb4a6f, []int{2}
 }
 
 func (m *CommonBlog) XXX_Unmarshal(b []byte) error {
@@ -87,8 +189,103 @@ func (m *CommonBlog) GetUsername() string {
 	return ""
 }
 
+type DeleteRequest struct {
+	// 用户名
+	// @inject_tag: validate:"required,max=12,min=7"
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty" validate:"required,max=12,min=7"`
+	// 博客唯一标识
+	// @inject_tag: validate:"required"
+	BlogId               int64    `protobuf:"varint,2,opt,name=blog_id,json=blogId,proto3" json:"blog_id,omitempty" validate:"required"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteRequest) Reset()         { *m = DeleteRequest{} }
+func (m *DeleteRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteRequest) ProtoMessage()    {}
+func (*DeleteRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_92db37cf00cb4a6f, []int{3}
+}
+
+func (m *DeleteRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteRequest.Unmarshal(m, b)
+}
+func (m *DeleteRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteRequest.Merge(m, src)
+}
+func (m *DeleteRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteRequest.Size(m)
+}
+func (m *DeleteRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteRequest proto.InternalMessageInfo
+
+func (m *DeleteRequest) GetUsername() string {
+	if m != nil {
+		return m.Username
+	}
+	return ""
+}
+
+func (m *DeleteRequest) GetBlogId() int64 {
+	if m != nil {
+		return m.BlogId
+	}
+	return 0
+}
+
+type DeleteResponse struct {
+	// 基本返回信息
+	Res                  *common.Response `protobuf:"bytes,1,opt,name=res,proto3" json:"res,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *DeleteResponse) Reset()         { *m = DeleteResponse{} }
+func (m *DeleteResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteResponse) ProtoMessage()    {}
+func (*DeleteResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_92db37cf00cb4a6f, []int{4}
+}
+
+func (m *DeleteResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteResponse.Unmarshal(m, b)
+}
+func (m *DeleteResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteResponse.Marshal(b, m, deterministic)
+}
+func (m *DeleteResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteResponse.Merge(m, src)
+}
+func (m *DeleteResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteResponse.Size(m)
+}
+func (m *DeleteResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteResponse proto.InternalMessageInfo
+
+func (m *DeleteResponse) GetRes() *common.Response {
+	if m != nil {
+		return m.Res
+	}
+	return nil
+}
+
 func init() {
+	proto.RegisterType((*CreateRequest)(nil), "blog.CreateRequest")
+	proto.RegisterType((*CreateResponse)(nil), "blog.CreateResponse")
 	proto.RegisterType((*CommonBlog)(nil), "blog.CommonBlog")
+	proto.RegisterType((*DeleteRequest)(nil), "blog.DeleteRequest")
+	proto.RegisterType((*DeleteResponse)(nil), "blog.DeleteResponse")
 }
 
 func init() {
@@ -96,15 +293,24 @@ func init() {
 }
 
 var fileDescriptor_92db37cf00cb4a6f = []byte{
-	// 157 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x4e, 0x2c, 0xc9, 0xcf,
-	0xcd, 0x4c, 0xd6, 0x87, 0x50, 0xf1, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0xfa, 0x49, 0x39, 0xf9, 0xe9,
-	0x60, 0x42, 0x0f, 0xcc, 0x17, 0x62, 0x01, 0xb1, 0x95, 0x32, 0xb8, 0xb8, 0x9c, 0xf3, 0x73, 0x73,
-	0xf3, 0xf3, 0x9c, 0x72, 0xf2, 0xd3, 0x85, 0xf8, 0xb8, 0x98, 0x32, 0x53, 0x24, 0x18, 0x15, 0x18,
-	0x35, 0x98, 0x83, 0x98, 0x32, 0x53, 0x84, 0x44, 0xb8, 0x58, 0x4b, 0x32, 0x4b, 0x72, 0x52, 0x25,
-	0x98, 0x14, 0x18, 0x35, 0x38, 0x83, 0x20, 0x1c, 0x21, 0x09, 0x2e, 0xf6, 0xe4, 0xfc, 0xbc, 0x92,
-	0xd4, 0xbc, 0x12, 0x09, 0x66, 0x05, 0x66, 0x0d, 0xce, 0x20, 0x18, 0x57, 0x48, 0x8a, 0x8b, 0xa3,
-	0xb4, 0x38, 0xb5, 0x28, 0x2f, 0x31, 0x37, 0x55, 0x82, 0x05, 0xac, 0x05, 0xce, 0x37, 0xe2, 0xe5,
-	0xe2, 0x06, 0xd9, 0x11, 0x9c, 0x5a, 0x54, 0x96, 0x99, 0x9c, 0x9a, 0xc4, 0x06, 0x76, 0x85, 0x31,
-	0x20, 0x00, 0x00, 0xff, 0xff, 0x2e, 0x43, 0x6f, 0x36, 0xac, 0x00, 0x00, 0x00,
+	// 290 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x51, 0xb1, 0x4e, 0xc3, 0x30,
+	0x10, 0x55, 0xe2, 0x92, 0xd2, 0x43, 0xad, 0xc0, 0x54, 0x22, 0xca, 0x54, 0x85, 0x81, 0x4e, 0xa9,
+	0xd4, 0xf0, 0x05, 0xb4, 0x0b, 0xab, 0x19, 0x19, 0xaa, 0x34, 0x39, 0x15, 0x4b, 0x49, 0x5c, 0x62,
+	0x97, 0x8d, 0x7f, 0x47, 0xb6, 0x63, 0x82, 0x11, 0x95, 0x58, 0xe2, 0x3c, 0xfb, 0xbd, 0xbb, 0xf7,
+	0xee, 0xe0, 0xbe, 0x50, 0xa2, 0xe1, 0xe5, 0xca, 0x1e, 0xbb, 0x63, 0x27, 0x94, 0x58, 0xed, 0x6b,
+	0x71, 0x30, 0x9f, 0xcc, 0x60, 0x3a, 0xd2, 0xff, 0xc9, 0xc3, 0x5f, 0xd4, 0x52, 0x34, 0x8d, 0x68,
+	0xfb, 0xc3, 0xd2, 0xd3, 0x57, 0x98, 0x6e, 0x3a, 0x2c, 0x14, 0x32, 0x7c, 0x3f, 0xa1, 0x54, 0x74,
+	0x0e, 0x17, 0x8a, 0xab, 0x1a, 0xe3, 0x60, 0x11, 0x2c, 0x27, 0xcc, 0x02, 0x1a, 0xc3, 0xb8, 0x14,
+	0xad, 0xc2, 0x56, 0xc5, 0xe1, 0x82, 0x2c, 0x27, 0xcc, 0x41, 0x9a, 0xc0, 0xe5, 0x49, 0x62, 0xd7,
+	0x16, 0x0d, 0xc6, 0xc4, 0x48, 0xbe, 0x71, 0xfa, 0x08, 0x33, 0x57, 0x5c, 0x1e, 0x45, 0x2b, 0x91,
+	0xa6, 0x40, 0x3a, 0x94, 0xa6, 0xf6, 0xd5, 0xfa, 0x3a, 0xeb, 0xad, 0xb8, 0x67, 0xa6, 0x1f, 0xd3,
+	0x37, 0x80, 0x8d, 0xb9, 0x7f, 0xaa, 0xc5, 0x81, 0xce, 0x20, 0xe4, 0x95, 0x11, 0x10, 0x16, 0xf2,
+	0x6a, 0xf0, 0x17, 0x9e, 0xf1, 0x47, 0xce, 0xfb, 0x1b, 0xfd, 0xf2, 0xb7, 0x85, 0xe9, 0x16, 0x6b,
+	0x1c, 0xc2, 0xff, 0x24, 0x07, 0x3e, 0x99, 0xde, 0xc1, 0x58, 0x8f, 0x76, 0xc7, 0x2b, 0xd3, 0x9a,
+	0xb0, 0x48, 0xc3, 0xe7, 0x4a, 0xa7, 0x74, 0x55, 0xfe, 0x9f, 0x72, 0xfd, 0x09, 0x37, 0x43, 0xca,
+	0x17, 0xec, 0x3e, 0x78, 0x89, 0x34, 0x87, 0xc8, 0x0e, 0x8c, 0xde, 0x66, 0x66, 0xa7, 0xde, 0x6e,
+	0x92, 0xb9, 0x7f, 0xd9, 0x77, 0xcb, 0x21, 0xb2, 0xfd, 0x9d, 0xc8, 0xcb, 0xe4, 0x44, 0xbe, 0xc5,
+	0x7d, 0x64, 0xd6, 0x9f, 0x7f, 0x05, 0x00, 0x00, 0xff, 0xff, 0xce, 0x5b, 0x1e, 0x2b, 0x54, 0x02,
+	0x00, 0x00,
 }

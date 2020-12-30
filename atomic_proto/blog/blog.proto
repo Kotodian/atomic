@@ -12,9 +12,33 @@ package blog;
 --micro_out=. \
 --doc_out=./atomic/atomic_doc \
 --doc_opt=markdown,atomic_blog.md \
---govalidators_out=. atomic/atomic_proto/blog/blog.proto
+atomic/atomic_proto/blog/blog.proto
 */
-service BlogService {
+import "atomic/atomic_proto/common/common.proto";
+
+// 最简易的博客
+service CommonBlogService {
+  // 创建
+  rpc Create(CreateRequest) returns (CreateResponse);
+  // 删除
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+}
+
+message CreateRequest {
+  // 标题 6到10个字之内
+  // @inject_tag: validate:"required,max=11,min=8"
+  string title = 1;
+  // 文章内容
+  // @inject_tag: validate:"required"
+  repeated string content = 2;
+  // 用户唯一标识
+  // @inject_tag: validate:"required,max=12,min=7"
+  string username = 3;
+}
+
+message CreateResponse {
+  // 基本返回信息
+  common.Response res = 1;
 }
 
 
@@ -27,4 +51,19 @@ message CommonBlog {
   repeated string content = 3;
   // 属于某个用户
   string username = 4;
+}
+
+
+message DeleteRequest {
+  // 用户名
+  // @inject_tag: validate:"required,max=12,min=7"
+  string username = 1;
+  // 博客唯一标识
+  // @inject_tag: validate:"required"
+  int64 blog_id = 2;
+}
+
+message DeleteResponse {
+  // 基本返回信息
+  common.Response res = 1;
 }

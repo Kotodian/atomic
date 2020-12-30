@@ -18,7 +18,7 @@ func main() {
 	)
 	srv.Init()
 
-	err := user.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserService))
+	err := user.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserHandler))
 
 	if err != nil {
 		panic(err)

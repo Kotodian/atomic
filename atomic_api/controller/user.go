@@ -109,28 +109,6 @@ func WebUser(engine *gin.Engine, port int) {
 		}
 		ctx.JSON(http.StatusOK, response)
 	})
-	// 用户创建博客api接口
-	routerUser.POST("/createCommonBlog", func(ctx *gin.Context) {
-		req := &pbUser.CreateCommonBlogRequest{}
-		err := ctx.ShouldBindJSON(req)
-		if err != nil {
-			ctx.JSON(http.StatusBadRequest, err)
-			return
-		}
-
-		err = validator.New().Struct(req)
-		if err != nil {
-			ctx.JSON(http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := cliService.CreateCommonBlog(ctx, req)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, err)
-			return
-		}
-		ctx.JSON(http.StatusOK, response)
-	})
 
 	err := srv.Init()
 	if err != nil {

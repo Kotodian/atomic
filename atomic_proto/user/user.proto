@@ -25,8 +25,6 @@ service UserService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   // 更新接口
   rpc Update(UpdateRequest) returns (UpdateResponse);
-  // 创建一个最简单的博客
-  rpc CreateCommonBlog(CreateCommonBlogRequest) returns (CreateCommonBlogResponse);
   // 登出接口
   rpc Logout(LogoutRequest) returns (LogoutResponse);
 }
@@ -115,22 +113,6 @@ message UpdateResponse {
     common.Response res = 1;
 }
 
-message CreateCommonBlogRequest {
-    // 标题 6到10个字之内
-    // @inject_tag: validate:"required,max=11,min=8"
-    string title = 1;
-    // 文章内容
-    // @inject_tag: validate:"required"
-    repeated string content = 2;
-    // 用户唯一标识
-    // @inject_tag: validate:"required,max=12,min=7"
-    string username = 3;
-}
-
-message CreateCommonBlogResponse {
-  // 基本返回信息
-  common.Response res = 1;
-}
 
 message LogoutRequest {
   // 用户唯一标识
@@ -139,5 +121,6 @@ message LogoutRequest {
 }
 
 message LogoutResponse {
-  common.Response res = 2;
+  common.Response res = 1;
 }
+

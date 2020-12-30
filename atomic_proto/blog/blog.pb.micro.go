@@ -4,6 +4,7 @@
 package blog
 
 import (
+	_ "atomic/atomic_proto/common"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	math "math"
@@ -31,44 +32,82 @@ var _ context.Context
 var _ client.Option
 var _ server.Option
 
-// Client API for BlogService service
+// Client API for CommonBlogService service
 
-type BlogService interface {
+type CommonBlogService interface {
+	// 创建
+	Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error)
+	// 删除
+	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
 }
 
-type blogService struct {
+type commonBlogService struct {
 	c    client.Client
 	name string
 }
 
-func NewBlogService(name string, c client.Client) BlogService {
+func NewCommonBlogService(name string, c client.Client) CommonBlogService {
 	if c == nil {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
 		name = "blog"
 	}
-	return &blogService{
+	return &commonBlogService{
 		c:    c,
 		name: name,
 	}
 }
 
-// Server API for BlogService service
-
-type BlogServiceHandler interface {
+func (c *commonBlogService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
+	req := c.c.NewRequest(c.name, "CommonBlogService.Create", in)
+	out := new(CreateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
-func RegisterBlogServiceHandler(s server.Server, hdlr BlogServiceHandler, opts ...server.HandlerOption) error {
-	type blogService interface {
+func (c *commonBlogService) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
+	req := c.c.NewRequest(c.name, "CommonBlogService.Delete", in)
+	out := new(DeleteResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
 	}
-	type BlogService struct {
-		blogService
-	}
-	h := &blogServiceHandler{hdlr}
-	return s.Handle(s.NewHandler(&BlogService{h}, opts...))
+	return out, nil
 }
 
-type blogServiceHandler struct {
-	BlogServiceHandler
+// Server API for CommonBlogService service
+
+type CommonBlogServiceHandler interface {
+	// 创建
+	Create(context.Context, *CreateRequest, *CreateResponse) error
+	// 删除
+	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
+}
+
+func RegisterCommonBlogServiceHandler(s server.Server, hdlr CommonBlogServiceHandler, opts ...server.HandlerOption) error {
+	type commonBlogService interface {
+		Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error
+		Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
+	}
+	type CommonBlogService struct {
+		commonBlogService
+	}
+	h := &commonBlogServiceHandler{hdlr}
+	return s.Handle(s.NewHandler(&CommonBlogService{h}, opts...))
+}
+
+type commonBlogServiceHandler struct {
+	CommonBlogServiceHandler
+}
+
+func (h *commonBlogServiceHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
+	return h.CommonBlogServiceHandler.Create(ctx, in, out)
+}
+
+func (h *commonBlogServiceHandler) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
+	return h.CommonBlogServiceHandler.Delete(ctx, in, out)
 }

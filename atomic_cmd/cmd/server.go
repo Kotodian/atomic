@@ -39,6 +39,10 @@ to quickly create a Cobra application.`,
 		if insideService == "user" {
 			register.UserServiceRegister(port)
 		}
+
+		if insideService == "blog" {
+			register.BlogServiceRegistry(port)
+		}
 	},
 }
 

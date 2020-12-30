@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package blog;
+import "atomic/atomic_proto/common/common.proto";
+
+// 用markdown编辑的博客
+service MarkdownBlogService {
+
+}
+
+message CreateRequest {
+
+}
+
+message CreateResponse {
+
+}

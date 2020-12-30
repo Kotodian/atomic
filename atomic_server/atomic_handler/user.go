@@ -1,7 +1,6 @@
 package atomic_handler
 
 import (
-	pbBlog "atomic/atomic_proto/blog"
 	"atomic/atomic_proto/common"
 	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_service"
@@ -9,28 +8,10 @@ import (
 	"context"
 )
 
-type UserService struct {
+type UserHandler struct {
 }
 
-func (u *UserService) CreateCommonBlog(ctx context.Context, req *pbUser.CreateCommonBlogRequest, resp *pbUser.CreateCommonBlogResponse) (err error) {
-	userModel := proto_model.User(&pbUser.User{
-		Username: req.Username,
-	})
-	blogModel := proto_model.CommonBlog(&pbBlog.CommonBlog{
-		Title:   req.Title,
-		Content: req.Content,
-	})
-	err = atomic_service.CreateBlog(ctx, userModel, blogModel)
-	if err != nil {
-		resp.Res = common.ServerErrResponse(err)
-		return
-	}
-
-	resp.Res = common.SuccessResponse(err)
-	return
-}
-
-func (u *UserService) Login(ctx context.Context, req *pbUser.LoginRequest, resp *pbUser.LoginResponse) (err error) {
+func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp *pbUser.LoginResponse) (err error) {
 	// proto转换
 	m := proto_model.User(&pbUser.User{
 		Username: req.Username,
@@ -51,7 +32,7 @@ func (u *UserService) Login(ctx context.Context, req *pbUser.LoginRequest, resp 
 	return
 }
 
-func (u *UserService) Register(ctx context.Context, req *pbUser.RegisterRequest, resp *pbUser.RegisterResponse) (err error) {
+func (u *UserHandler) Register(ctx context.Context, req *pbUser.RegisterRequest, resp *pbUser.RegisterResponse) (err error) {
 	m := proto_model.User(&pbUser.User{
 		Username: req.Username,
 		Password: req.Password,
@@ -71,7 +52,7 @@ func (u *UserService) Register(ctx context.Context, req *pbUser.RegisterRequest,
 	return
 }
 
-func (u *UserService) Update(ctx context.Context, req *pbUser.UpdateRequest, resp *pbUser.UpdateResponse) (err error) {
+func (u *UserHandler) Update(ctx context.Context, req *pbUser.UpdateRequest, resp *pbUser.UpdateResponse) (err error) {
 	m := proto_model.User(&pbUser.User{
 		Nickname: req.Nickname,
 		Password: req.Password,
@@ -91,6 +72,6 @@ func (u *UserService) Update(ctx context.Context, req *pbUser.UpdateRequest, res
 	return
 }
 
-func (u *UserService) Logout(ctx context.Context, req *pbUser.LogoutRequest, resp *pbUser.LogoutResponse) (err error) {
+func (u *UserHandler) Logout(ctx context.Context, req *pbUser.LogoutRequest, resp *pbUser.LogoutResponse) (err error) {
 	panic("implement me")
 }

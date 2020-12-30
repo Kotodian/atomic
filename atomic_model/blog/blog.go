@@ -24,7 +24,12 @@ func (c *CommonBlog) Update(ctx context.Context, db *gorm.DB) error {
 }
 
 func (c *CommonBlog) Delete(ctx context.Context, db *gorm.DB) error {
-	panic("implement me")
+	err := db.WithContext(ctx).Delete(&c).Error
+	if err != nil {
+		log.Error(err, ctx)
+		return atomic_error.ErrDeleteBlog
+	}
+	return nil
 }
 
 func (c *CommonBlog) ProposeTime(ctx context.Context, db *gorm.DB) int64 {
