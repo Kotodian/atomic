@@ -6,8 +6,6 @@ import (
 )
 
 type Blog interface {
-	// 创建者 返回用户
-	Proposer(context.Context, *gorm.DB) User
 	// 创建时间 返回时间戳
 	ProposeTime(context.Context, *gorm.DB) int64
 	// 是否拥有节点

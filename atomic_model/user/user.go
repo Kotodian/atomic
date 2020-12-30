@@ -21,6 +21,17 @@ type User struct {
 	Status   string `gorm:"-"`
 }
 
+func (u *User) NickName(ctx context.Context, db *gorm.DB) (string, error) {
+	tmp := &User{}
+
+	err := db.WithContext(ctx).Table(user).Where("username = ?", u.Username).First(&tmp).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return "", atomic_error.ErrUserNotExists
+	}
+	return tmp.Nickname, nil
+}
+
 const user = "users"
 
 const (

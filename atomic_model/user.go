@@ -10,6 +10,8 @@ type User interface {
 	Login(context.Context, *gorm.DB) error
 	// 更新个人信息
 	Update(context.Context, *gorm.DB) error
+	// 获取别名
+	NickName(context.Context, *gorm.DB) (string, error)
 	// 创建博客
 	CreateBlog(context.Context, *gorm.DB, Blog) error
 	// 删除博客

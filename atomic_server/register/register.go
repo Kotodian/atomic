@@ -3,6 +3,7 @@ package register
 import (
 	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_handler"
+	"atomic/internal/atomic_error"
 	"atomic/internal/etcd"
 	"atomic/internal/kafka_msg"
 	"atomic/internal/log"
@@ -46,19 +47,30 @@ func UserServiceRegister(port int) {
 			opt.Addrs = kafka_msg.URL
 		})),
 	)
-	srv.Init()
+
+	afterStart := func() error {
+		brk := srv.Options().Broker
+		if err := brk.Connect(); err != nil {
+			log.Fatal(atomic_error.ErrBrokerConnect.Error())
+			return err
+		}
+		return nil
+	}
+
+	srv.Init(
+		micro.AfterStart(afterStart),
+	)
 
 	err = pbUser.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserService))
 
 	if err != nil {
 		return
 	}
-
+	//todo: 将通知消息写入消息队列
 	err = broker.Connect()
 	if err != nil {
 		return
 	}
-
 	if err = srv.Run(); err != nil {
 		panic(err)
 	}

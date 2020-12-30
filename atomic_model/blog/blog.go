@@ -27,10 +27,6 @@ func (c *CommonBlog) Delete(ctx context.Context, db *gorm.DB) error {
 	panic("implement me")
 }
 
-func (c *CommonBlog) Proposer(ctx context.Context, db *gorm.DB) atomic_model.User {
-	panic("implement me")
-}
-
 func (c *CommonBlog) ProposeTime(ctx context.Context, db *gorm.DB) int64 {
 	panic("implement me")
 }
