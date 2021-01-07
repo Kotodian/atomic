@@ -8,4 +8,5 @@ var (
 	ErrUserCreate    = errors.New("用户创建失败")
 	ErrUserLogin     = errors.New("用户登录失败")
 	ErrUserNotOnline = errors.New("该用户当前不是登录状态")
+	ErrUserLogout    = errors.New("用户退出失败")
 )

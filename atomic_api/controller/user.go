@@ -108,7 +108,20 @@ func WebUser(engine *gin.Engine, port int) {
 		}
 		ctx.JSON(http.StatusOK, response)
 	})
-
+	routerUser.POST("/logout", func(ctx *gin.Context) {
+		req := &pbUser.LogoutRequest{}
+		err := ctx.ShouldBindJSON(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err.Error())
+			return
+		}
+		response, err := cliService.Logout(ctx, req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, response)
+	})
 	err := srv.Init()
 	if err != nil {
 		panic(err)

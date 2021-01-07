@@ -68,5 +68,14 @@ func (u *UserHandler) Update(ctx context.Context, req *pbUser.UpdateRequest, res
 }
 
 func (u *UserHandler) Logout(ctx context.Context, req *pbUser.LogoutRequest, resp *pbUser.LogoutResponse) (err error) {
-	panic("implement me")
+	m := &user.User{}
+	err = proto_model.ProtoToModel(req, m)
+	if err != nil {
+		return err
+	}
+	err = atomic_service.Logout(ctx, m, req.Token)
+	if err != nil {
+		return err
+	}
+	return nil
 }

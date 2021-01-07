@@ -111,7 +111,10 @@ message UpdateResponse {
 message LogoutRequest {
   // 用户唯一标识
   int64 id = 1;
+  // 用户名
   string username = 2;
+  // token
+  string token = 3;
 }
 
 message LogoutResponse {
