@@ -12,3 +12,4 @@
 *.log
 atomic_doc/atomic_user.md
 /atomic_doc/atomic_blog.md
+/atomic_doc/atomic_cmd.md

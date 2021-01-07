@@ -49,7 +49,7 @@ func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 		return atomic_error.ErrUserNotExists
 	}
 
-	if encrypt.MD5(tmp.Password) != u.Password {
+	if tmp.Password != encrypt.MD5(u.Password) {
 		log.Error(atomic_error.ErrPasswordWrong, ctx)
 		return atomic_error.ErrPasswordWrong
 	}

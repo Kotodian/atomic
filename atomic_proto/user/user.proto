@@ -48,10 +48,10 @@ message User {
 
 message LoginRequest {
   // 用户名
-  // @inject_tag: validate:"required,max=12,min=7"
+  // @inject_tag: validate:"required"
   string username = 1;
   // 密码
-  // @inject_tag: validate:"required,max=12,min=7"
+  // @inject_tag: validate:"required"
   string password = 2;
 }
 
@@ -64,19 +64,19 @@ message LoginResponse {
 
 message RegisterRequest {
     // 用户名 长度必须大于7位小于13位
-    // @inject_tag: validate:"required,max=12,min=7"
+    // @inject_tag: validate:"required"
     string username = 1;
     // 密码 长度必须大于7位小于13位
-    // @inject_tag: validate:"required,max=12,min=7"
+    // @inject_tag: validate:"required"
     string password = 2;
-    // @inject_tag: validate:"required,max=12,min=9"
+    // @inject_tag: validate:"required"
     //别名 长度必须大于8位小于13位
     string nickname = 3;
     // 邮箱
     // @inject_tag: validate:"required,email"
     string email = 4;
     // 手机号码或者电话号码
-    // @inject_tag: validate:"required,max=11,min=8"
+    // @inject_tag: validate:"required"
     string phone = 5;
 }
 
@@ -89,16 +89,16 @@ message UpdateRequest {
     // 用户名
     string username = 1;
     // 别名
-    // @inject_tag: validate:"required,max=12,min=9"
+    // @inject_tag: validate:"required"
     string nickname = 2;
     // 邮箱
     // @inject_tag: validate:"required,email"
     string email = 3;
     // 手机或者电话
-    // @inject_tag: validate:"required,max=11,min=8"
+    // @inject_tag: validate:"required"
     string phone = 4;
     // 密码
-    // @inject_tag: validate:"required,max=12,min=7"
+    // @inject_tag: validate:"required"
     string password = 5;
 }
 

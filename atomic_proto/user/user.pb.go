@@ -140,11 +140,11 @@ func (m *User) GetPassword() string {
 
 type LoginRequest struct {
 	// 用户名
-	// @inject_tag: validate:"required,max=12,min=7"
-	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty" validate:"required,max=12,min=7"`
+	// @inject_tag: validate:"required"
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty" validate:"required"`
 	// 密码
-	// @inject_tag: validate:"required,max=12,min=7"
-	Password             string   `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required,max=12,min=7"`
+	// @inject_tag: validate:"required"
+	Password             string   `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -240,20 +240,20 @@ func (m *LoginResponse) GetToken() string {
 
 type RegisterRequest struct {
 	// 用户名 长度必须大于7位小于13位
-	// @inject_tag: validate:"required,max=12,min=7"
-	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty" validate:"required,max=12,min=7"`
+	// @inject_tag: validate:"required"
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty" validate:"required"`
 	// 密码 长度必须大于7位小于13位
-	// @inject_tag: validate:"required,max=12,min=7"
-	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required,max=12,min=7"`
-	// @inject_tag: validate:"required,max=12,min=9"
+	// @inject_tag: validate:"required"
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required"`
+	// @inject_tag: validate:"required"
 	//别名 长度必须大于8位小于13位
-	Nickname string `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty" validate:"required,max=12,min=9"`
+	Nickname string `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty" validate:"required"`
 	// 邮箱
 	// @inject_tag: validate:"required,email"
 	Email string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty" validate:"required,email"`
 	// 手机号码或者电话号码
-	// @inject_tag: validate:"required,max=11,min=8"
-	Phone                string   `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty" validate:"required,max=11,min=8"`
+	// @inject_tag: validate:"required"
+	Phone                string   `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty" validate:"required"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -363,17 +363,17 @@ type UpdateRequest struct {
 	// 用户名
 	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	// 别名
-	// @inject_tag: validate:"required,max=12,min=9"
-	Nickname string `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty" validate:"required,max=12,min=9"`
+	// @inject_tag: validate:"required"
+	Nickname string `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty" validate:"required"`
 	// 邮箱
 	// @inject_tag: validate:"required,email"
 	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty" validate:"required,email"`
 	// 手机或者电话
-	// @inject_tag: validate:"required,max=11,min=8"
-	Phone string `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty" validate:"required,max=11,min=8"`
+	// @inject_tag: validate:"required"
+	Phone string `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty" validate:"required"`
 	// 密码
-	// @inject_tag: validate:"required,max=12,min=7"
-	Password             string   `protobuf:"bytes,5,opt,name=password,proto3" json:"password,omitempty" validate:"required,max=12,min=7"`
+	// @inject_tag: validate:"required"
+	Password             string   `protobuf:"bytes,5,opt,name=password,proto3" json:"password,omitempty" validate:"required"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`

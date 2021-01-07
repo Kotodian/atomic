@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"atomic/atomic_api/middleware"
 	pbUser "atomic/atomic_proto/user"
 	"atomic/internal/etcd"
 	"atomic/internal/service"
@@ -48,10 +47,10 @@ func WebUser(engine *gin.Engine, port int) {
 			return
 		}
 
-		err = validator.New().Struct(&req)
+		err = validator.New().Struct(req)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, err)
+			ctx.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
 
@@ -73,7 +72,7 @@ func WebUser(engine *gin.Engine, port int) {
 
 		err = validator.New().Struct(req)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, err)
+			ctx.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
 
@@ -85,7 +84,7 @@ func WebUser(engine *gin.Engine, port int) {
 		ctx.JSON(http.StatusOK, response)
 	})
 
-	routerUser.Use(middleware.JWTAuthMiddleware())
+	//routerUser.Use(middleware.JWTAuthMiddleware())
 
 	// 用户更新api接口
 	routerUser.POST("/update", func(ctx *gin.Context) {
