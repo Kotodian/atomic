@@ -39,7 +39,7 @@ func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.CreateRequest, res
 	userModel := &user.User{}
 	blogModel := &blog.CommonBlog{}
 	err = proto_model.ProtoToModel(&pbUser.User{
-		Username: req.Username,
+		Username: req.GetUsername(),
 	}, userModel)
 
 	if err != nil {
@@ -47,8 +47,8 @@ func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.CreateRequest, res
 	}
 
 	err = proto_model.ProtoToModel(&pbBlog.CommonBlog{
-		Title:   req.Title,
-		Content: req.Content,
+		Title:   req.GetTitle(),
+		Content: req.GetContent(),
 	}, blogModel)
 	if err != nil {
 		return
