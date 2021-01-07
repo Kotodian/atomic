@@ -86,18 +86,20 @@ message RegisterResponse {
 }
 
 message UpdateRequest {
+    // 用户名
+    string username = 1;
     // 别名
     // @inject_tag: validate:"required,max=12,min=9"
-    string nickname = 1;
+    string nickname = 2;
     // 邮箱
     // @inject_tag: validate:"required,email"
-    string email = 2;
+    string email = 3;
     // 手机或者电话
     // @inject_tag: validate:"required,max=11,min=8"
-    string phone = 3;
+    string phone = 4;
     // 密码
     // @inject_tag: validate:"required,max=12,min=7"
-    string password = 4;
+    string password = 5;
 }
 
 message UpdateResponse {

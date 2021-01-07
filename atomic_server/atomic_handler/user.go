@@ -1,6 +1,7 @@
 package atomic_handler
 
 import (
+	"atomic/atomic_model/user"
 	"atomic/atomic_proto/common"
 	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_service"
@@ -13,10 +14,11 @@ type UserHandler struct {
 
 func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp *pbUser.LoginResponse) (err error) {
 	// proto转换
-	m := proto_model.User(&pbUser.User{
-		Username: req.Username,
-		Password: req.Password,
-	})
+	m := &user.User{}
+	err = proto_model.ProtoToModel(&pbUser.User{
+		Username: req.GetUsername(),
+		Password: req.GetPassword(),
+	}, m)
 
 	token, err := atomic_service.Login(ctx, m)
 
@@ -33,13 +35,14 @@ func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp 
 }
 
 func (u *UserHandler) Register(ctx context.Context, req *pbUser.RegisterRequest, resp *pbUser.RegisterResponse) (err error) {
-	m := proto_model.User(&pbUser.User{
-		Username: req.Username,
-		Password: req.Password,
-		Nickname: req.Nickname,
-		Email:    req.Email,
-		Phone:    req.Phone,
-	})
+	m := &user.User{}
+	err = proto_model.ProtoToModel(&pbUser.User{
+		Username: req.GetUsername(),
+		Nickname: req.GetNickname(),
+		Email:    req.GetEmail(),
+		Phone:    req.GetPhone(),
+		Password: req.GetPassword(),
+	}, m)
 
 	err = atomic_service.Register(ctx, m)
 
@@ -53,13 +56,17 @@ func (u *UserHandler) Register(ctx context.Context, req *pbUser.RegisterRequest,
 }
 
 func (u *UserHandler) Update(ctx context.Context, req *pbUser.UpdateRequest, resp *pbUser.UpdateResponse) (err error) {
-	m := proto_model.User(&pbUser.User{
-		Nickname: req.Nickname,
-		Password: req.Password,
-		Email:    req.Email,
-		Phone:    req.Phone,
-	})
-
+	m := &user.User{}
+	err = proto_model.ProtoToModel(&pbUser.User{
+		Username: req.GetUsername(),
+		Nickname: req.GetNickname(),
+		Email:    req.GetEmail(),
+		Phone:    req.GetPhone(),
+		Password: req.GetPassword(),
+	}, m)
+	if err != nil {
+		return
+	}
 	err = atomic_service.Update(ctx, m)
 
 	if err != nil {

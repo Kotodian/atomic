@@ -25,7 +25,6 @@ require (
 	github.com/micro/go-plugins/wrapper/ratelimiter/uber v0.0.0-20200119172437-4fe21aa238fd
 	github.com/micro/go-plugins/wrapper/trace/opentracing v0.0.0-20200119172437-4fe21aa238fd
 	github.com/miekg/dns v1.1.27 // indirect
-	github.com/mwitkow/go-proto-validators v0.3.2
 	github.com/nats-io/nats-server/v2 v2.1.6 // indirect
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1 // indirect

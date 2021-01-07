@@ -1,6 +1,8 @@
 package atomic_handler
 
 import (
+	"atomic/atomic_model/blog"
+	"atomic/atomic_model/user"
 	pbBlog "atomic/atomic_proto/blog"
 	"atomic/atomic_proto/common"
 	pbUser "atomic/atomic_proto/user"
@@ -13,9 +15,14 @@ type BlogHandler struct {
 }
 
 func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.DeleteRequest, resp *pbBlog.DeleteResponse) (err error) {
-	blogModel := proto_model.CommonBlog(&pbBlog.CommonBlog{
-		Id: req.BlogId,
-	})
+	blogModel := &blog.CommonBlog{}
+
+	err = proto_model.ProtoToModel(&pbBlog.CommonBlog{
+		Id: req.GetBlogId(),
+	}, blogModel)
+	if err != nil {
+		return
+	}
 
 	err = atomic_service.DeleteBlog(ctx, blogModel)
 	if err != nil {
@@ -29,13 +36,24 @@ func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.DeleteRequest, res
 }
 
 func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.CreateRequest, resp *pbBlog.CreateResponse) (err error) {
-	userModel := proto_model.User(&pbUser.User{
+	userModel := &user.User{}
+	blogModel := &blog.CommonBlog{}
+	err = proto_model.ProtoToModel(&pbUser.User{
 		Username: req.Username,
-	})
-	blogModel := proto_model.CommonBlog(&pbBlog.CommonBlog{
+	}, userModel)
+
+	if err != nil {
+		return
+	}
+
+	err = proto_model.ProtoToModel(&pbBlog.CommonBlog{
 		Title:   req.Title,
 		Content: req.Content,
-	})
+	}, blogModel)
+	if err != nil {
+		return
+	}
+
 	err = atomic_service.CreateBlog(ctx, userModel, blogModel)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
