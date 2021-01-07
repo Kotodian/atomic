@@ -17,9 +17,7 @@ type BlogHandler struct {
 func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.DeleteRequest, resp *pbBlog.DeleteResponse) (err error) {
 	blogModel := &blog.CommonBlog{}
 
-	err = proto_model.ProtoToModel(&pbBlog.CommonBlog{
-		Id: req.GetBlogId(),
-	}, blogModel)
+	err = proto_model.ProtoToModel(req, blogModel)
 	if err != nil {
 		return
 	}
