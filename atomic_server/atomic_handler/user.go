@@ -13,7 +13,6 @@ type UserHandler struct {
 }
 
 func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp *pbUser.LoginResponse) (err error) {
-	// proto转换
 	m := &user.User{}
 	err = proto_model.ProtoToModel(req, m)
 
@@ -33,7 +32,7 @@ func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp 
 
 func (u *UserHandler) Register(ctx context.Context, req *pbUser.RegisterRequest, resp *pbUser.RegisterResponse) (err error) {
 	m := &user.User{}
-	err = proto_model.ProtoToModel(&req, m)
+	err = proto_model.ProtoToModel(req, m)
 
 	err = atomic_service.Register(ctx, m)
 
@@ -48,7 +47,7 @@ func (u *UserHandler) Register(ctx context.Context, req *pbUser.RegisterRequest,
 
 func (u *UserHandler) Update(ctx context.Context, req *pbUser.UpdateRequest, resp *pbUser.UpdateResponse) (err error) {
 	m := &user.User{}
-	err = proto_model.ProtoToModel(&req, m)
+	err = proto_model.ProtoToModel(req, m)
 	if err != nil {
 		return
 	}
