@@ -12,7 +12,7 @@ import (
 type CategoryHandler struct {
 }
 
-func (c *CategoryHandler) List(ctx context.Context, req *pbBlog.ListReq, resp *pbBlog.ListResp) (err error) {
+func (c *CategoryHandler) List(ctx context.Context, req *pbBlog.CategoryListRequest, resp *pbBlog.CategoryListResponse) (err error) {
 	categories, err := atomic_service.CommonCategoryList(ctx)
 	if err != nil {
 		return
@@ -30,7 +30,7 @@ func (c *CategoryHandler) List(ctx context.Context, req *pbBlog.ListReq, resp *p
 	return nil
 }
 
-func (c *CategoryHandler) Create(ctx context.Context, req *pbBlog.CreateReq, resp *pbBlog.CreateResp) (err error) {
+func (c *CategoryHandler) Create(ctx context.Context, req *pbBlog.CategoryCreateRequest, resp *pbBlog.CategoryCreateResponse) (err error) {
 	m := &category.Category{}
 	err = proto_model.ProtoToModel(req, m)
 	if err != nil {
@@ -45,7 +45,7 @@ func (c *CategoryHandler) Create(ctx context.Context, req *pbBlog.CreateReq, res
 	return nil
 }
 
-func (c *CategoryHandler) Update(ctx context.Context, req *pbBlog.UpdateReq, resp *pbBlog.UpdateResp) (err error) {
+func (c *CategoryHandler) Update(ctx context.Context, req *pbBlog.CategoryUpdateRequest, resp *pbBlog.CategoryUpdateResponse) (err error) {
 	m := &category.Category{}
 	err = proto_model.ProtoToModel(req, m)
 	if err != nil {
@@ -60,7 +60,7 @@ func (c *CategoryHandler) Update(ctx context.Context, req *pbBlog.UpdateReq, res
 	return nil
 }
 
-func (c *CategoryHandler) Delete(ctx context.Context, req *pbBlog.DeleteReq, resp *pbBlog.DeleteResp) (err error) {
+func (c *CategoryHandler) Delete(ctx context.Context, req *pbBlog.CategoryDeleteRequest, resp *pbBlog.CategoryDeleteResponse) (err error) {
 	m := &category.Category{}
 	err = proto_model.ProtoToModel(req, m)
 	if err != nil {

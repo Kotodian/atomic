@@ -14,7 +14,7 @@ import (
 type BlogHandler struct {
 }
 
-func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.DeleteRequest, resp *pbBlog.DeleteResponse) (err error) {
+func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.BlogDeleteRequest, resp *pbBlog.BlogDeleteResponse) (err error) {
 	blogModel := &blog.CommonBlog{}
 
 	err = proto_model.ProtoToModel(req, blogModel)
@@ -33,7 +33,7 @@ func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.DeleteRequest, res
 
 }
 
-func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.CreateRequest, resp *pbBlog.CreateResponse) (err error) {
+func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.BlogCreateRequest, resp *pbBlog.BlogCreateResponse) (err error) {
 	userModel := &user.User{}
 	blogModel := &blog.CommonBlog{}
 	err = proto_model.ProtoToModel(&pbUser.User{
