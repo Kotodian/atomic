@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"atomic/atomic_api/middleware"
 	pbBlog "atomic/atomic_proto/blog"
 	"atomic/internal/etcd"
 	"atomic/internal/service"
@@ -35,12 +34,14 @@ func WebBlog(engine *gin.Engine, port int) {
 		micro.WrapClient(hystrix.NewClientWrapper()),
 	).Client()
 
-	cliService := pbBlog.NewBlogService(service.InnerBlog, client)
+	cliBlogService := pbBlog.NewBlogService(service.InnerBlog, client)
+	cliCategoryService := pbBlog.NewCategoryService(service.InnerBlog, client)
+	routerBlog := engine.Group("blog")
+	//routerBlog.Use(middleware.JWTAuthMiddleware())
 
-	routerBlog := engine.Group("blog").Use(middleware.JWTAuthMiddleware())
 	// 用户创建博客api接口
 	routerBlog.POST("/create", func(ctx *gin.Context) {
-		req := &pbBlog.CreateRequest{}
+		req := &pbBlog.BlogCreateRequest{}
 		err := ctx.ShouldBindJSON(req)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, err)
@@ -53,7 +54,7 @@ func WebBlog(engine *gin.Engine, port int) {
 			return
 		}
 
-		response, err := cliService.Create(ctx, req)
+		response, err := cliBlogService.Create(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
 			return
@@ -62,7 +63,7 @@ func WebBlog(engine *gin.Engine, port int) {
 	})
 	// 用户删除博客api接口
 	routerBlog.POST("/delete", func(ctx *gin.Context) {
-		req := &pbBlog.DeleteRequest{}
+		req := &pbBlog.BlogDeleteRequest{}
 		err := ctx.ShouldBindJSON(req)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, err)
@@ -75,14 +76,66 @@ func WebBlog(engine *gin.Engine, port int) {
 			return
 		}
 
-		response, err := cliService.Delete(ctx, req)
+		response, err := cliBlogService.Delete(ctx, req)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, err)
 			return
 		}
 		ctx.JSON(http.StatusOK, response)
 	})
+	routerCategory := engine.Group("category")
+	routerCategory.GET("/list", func(ctx *gin.Context) {
+		req := &pbBlog.CategoryListRequest{}
+		response, err := cliCategoryService.List(ctx, req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, response)
 
+	})
+	routerCategory.POST("/create", func(ctx *gin.Context) {
+		req := &pbBlog.CategoryCreateRequest{}
+		err := ctx.ShouldBindJSON(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+		resp, err := cliCategoryService.Create(ctx, req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	})
+	routerCategory.POST("/update", func(ctx *gin.Context) {
+		req := &pbBlog.CategoryUpdateRequest{}
+		err := ctx.ShouldBindJSON(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+		resp, err := cliCategoryService.Update(ctx, req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	})
+	routerCategory.POST("/delete", func(ctx *gin.Context) {
+		req := &pbBlog.CategoryDeleteRequest{}
+		err := ctx.ShouldBindJSON(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+		resp, err := cliCategoryService.Delete(ctx, req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	})
 	err := srv.Init()
 	if err != nil {
 		panic(err)

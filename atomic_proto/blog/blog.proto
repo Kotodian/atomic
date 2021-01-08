@@ -14,12 +14,12 @@ import "atomic/atomic_proto/common/common.proto";
 // 最简易的博客
 service BlogService {
   // 创建
-  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc Create(BlogCreateRequest) returns (BlogCreateResponse);
   // 删除
-  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc Delete(BlogDeleteRequest) returns (BlogDeleteResponse);
 }
 
-message CreateRequest {
+message BlogCreateRequest {
   // 标题 6到10个字之内
   // @inject_tag: validate:"required,max=11,min=8"
   string title = 1;
@@ -31,7 +31,7 @@ message CreateRequest {
   string username = 3;
 }
 
-message CreateResponse {
+message BlogCreateResponse {
   // 基本返回信息
   common.Response res = 1;
 }
@@ -49,7 +49,7 @@ message CommonBlog {
 }
 
 
-message DeleteRequest {
+message BlogDeleteRequest {
   // 用户名
   // @inject_tag: validate:"required,max=12,min=7"
   string username = 1;
@@ -58,7 +58,7 @@ message DeleteRequest {
   int64 blog_id = 2;
 }
 
-message DeleteResponse {
+message BlogDeleteResponse {
   // 基本返回信息
   common.Response res = 1;
 }

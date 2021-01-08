@@ -26,7 +26,7 @@ func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp 
 	}
 
 	// 返回token
-	resp.Res = common.SuccessResponse(err)
+	resp.Res = common.SuccessResponse()
 	resp.Token = token
 
 	return
@@ -44,7 +44,7 @@ func (u *UserHandler) Register(ctx context.Context, req *pbUser.RegisterRequest,
 		resp.Res = common.ServerErrResponse(err)
 		return
 	}
-	resp.Res = common.SuccessResponse(err)
+	resp.Res = common.SuccessResponse()
 
 	return
 }
@@ -62,7 +62,7 @@ func (u *UserHandler) Update(ctx context.Context, req *pbUser.UpdateRequest, res
 		return
 	}
 
-	resp.Res = common.SuccessResponse(err)
+	resp.Res = common.SuccessResponse()
 
 	return
 }
@@ -79,5 +79,6 @@ func (u *UserHandler) Logout(ctx context.Context, req *pbUser.LogoutRequest, res
 		resp.Res = common.ServerErrResponse(err)
 		return
 	}
+	resp.Res = common.SuccessResponse()
 	return nil
 }

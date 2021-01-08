@@ -9,10 +9,11 @@ import (
 )
 
 type CommonBlog struct {
-	Id       int64  `gorm:"id"`
-	Username string `gorm:"username"`
-	Title    string `gorm:"title"`
-	Content  string `gorm:"type:longtext;content"`
+	Id         int64  `gorm:"id"`
+	Username   string `gorm:"username"`
+	CategoryId int64  `gorm:"category_id"`
+	Title      string `gorm:"title"`
+	Content    string `gorm:"type:longtext;content"`
 }
 
 const (
@@ -24,7 +25,7 @@ func (c *CommonBlog) Update(ctx context.Context, db *gorm.DB) error {
 }
 
 func (c *CommonBlog) Delete(ctx context.Context, db *gorm.DB) error {
-	err := db.WithContext(ctx).Delete(&c).Error
+	err := db.Table(blog).WithContext(ctx).Delete(&c).Error
 	if err != nil {
 		log.Error(err, ctx)
 		return atomic_error.ErrDeleteBlog
@@ -46,7 +47,7 @@ func (c *CommonBlog) CreateNode(ctx context.Context, db *gorm.DB, node atomic_mo
 
 func (c *CommonBlog) Insert(ctx context.Context, db *gorm.DB, username string) error {
 	c.Username = username
-	err := db.WithContext(ctx).Create(c).Error
+	err := db.Table(blog).WithContext(ctx).Create(c).Error
 	if err != nil {
 		log.Error(err)
 		return atomic_error.ErrCreateBlog

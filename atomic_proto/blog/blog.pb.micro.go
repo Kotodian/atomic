@@ -36,9 +36,9 @@ var _ server.Option
 
 type BlogService interface {
 	// 创建
-	Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error)
+	Create(ctx context.Context, in *BlogCreateRequest, opts ...client.CallOption) (*BlogCreateResponse, error)
 	// 删除
-	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
+	Delete(ctx context.Context, in *BlogDeleteRequest, opts ...client.CallOption) (*BlogDeleteResponse, error)
 }
 
 type blogService struct {
@@ -59,9 +59,9 @@ func NewBlogService(name string, c client.Client) BlogService {
 	}
 }
 
-func (c *blogService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
+func (c *blogService) Create(ctx context.Context, in *BlogCreateRequest, opts ...client.CallOption) (*BlogCreateResponse, error) {
 	req := c.c.NewRequest(c.name, "BlogService.Create", in)
-	out := new(CreateResponse)
+	out := new(BlogCreateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,9 +69,9 @@ func (c *blogService) Create(ctx context.Context, in *CreateRequest, opts ...cli
 	return out, nil
 }
 
-func (c *blogService) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
+func (c *blogService) Delete(ctx context.Context, in *BlogDeleteRequest, opts ...client.CallOption) (*BlogDeleteResponse, error) {
 	req := c.c.NewRequest(c.name, "BlogService.Delete", in)
-	out := new(DeleteResponse)
+	out := new(BlogDeleteResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -83,15 +83,15 @@ func (c *blogService) Delete(ctx context.Context, in *DeleteRequest, opts ...cli
 
 type BlogServiceHandler interface {
 	// 创建
-	Create(context.Context, *CreateRequest, *CreateResponse) error
+	Create(context.Context, *BlogCreateRequest, *BlogCreateResponse) error
 	// 删除
-	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
+	Delete(context.Context, *BlogDeleteRequest, *BlogDeleteResponse) error
 }
 
 func RegisterBlogServiceHandler(s server.Server, hdlr BlogServiceHandler, opts ...server.HandlerOption) error {
 	type blogService interface {
-		Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error
-		Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
+		Create(ctx context.Context, in *BlogCreateRequest, out *BlogCreateResponse) error
+		Delete(ctx context.Context, in *BlogDeleteRequest, out *BlogDeleteResponse) error
 	}
 	type BlogService struct {
 		blogService
@@ -104,10 +104,10 @@ type blogServiceHandler struct {
 	BlogServiceHandler
 }
 
-func (h *blogServiceHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
+func (h *blogServiceHandler) Create(ctx context.Context, in *BlogCreateRequest, out *BlogCreateResponse) error {
 	return h.BlogServiceHandler.Create(ctx, in, out)
 }
 
-func (h *blogServiceHandler) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
+func (h *blogServiceHandler) Delete(ctx context.Context, in *BlogDeleteRequest, out *BlogDeleteResponse) error {
 	return h.BlogServiceHandler.Delete(ctx, in, out)
 }

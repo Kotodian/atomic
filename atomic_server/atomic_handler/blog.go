@@ -28,7 +28,7 @@ func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.DeleteRequest, res
 		return
 	}
 
-	resp.Res = common.SuccessResponse(err)
+	resp.Res = common.SuccessResponse()
 	return
 
 }
@@ -58,6 +58,6 @@ func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.CreateRequest, res
 		return
 	}
 
-	resp.Res = common.SuccessResponse(err)
+	resp.Res = common.SuccessResponse()
 	return
 }

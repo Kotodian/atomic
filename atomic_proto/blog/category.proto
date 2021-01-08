@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package blog;
+
+import "atomic/atomic_proto/common/common.proto";
+
+service CategoryService {
+  // 目录列表
+  rpc List(CategoryListRequest) returns (CategoryListResponse);
+  // 目录创建
+  rpc Create(CategoryCreateRequest) returns (CategoryCreateResponse);
+  // 目录更新
+  rpc Update(CategoryUpdateRequest) returns (CategoryUpdateResponse);
+  // 目录删除
+  rpc Delete(CategoryDeleteRequest) returns (CategoryDeleteResponse);
+}
+
+
+message CategoryListRequest {
+
+}
+
+message CategoryListResponse {
+  common.Response res = 1;
+  repeated Category categories = 2;
+}
+
+message CategoryCreateRequest {
+  // 目录名称
+  string name = 1;
+}
+
+message CategoryCreateResponse {
+  common.Response res = 1;
+}
+
+message Category {
+  int64 id = 1;
+  string name = 2;
+}
+
+message CategoryUpdateRequest {
+  // 目录id 唯一标识
+  int64 id = 1;
+  // 目录名称
+  string name = 2;
+}
+
+message CategoryUpdateResponse {
+  common.Response res = 1;
+}
+
+message CategoryDeleteRequest {
+  // 目录id 唯一标识
+  int64 id = 1;
+}
+
+message CategoryDeleteResponse {
+  common.Response res = 1;
+}

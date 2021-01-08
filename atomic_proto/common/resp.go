@@ -7,7 +7,7 @@ func ServerErrResponse(err error) *Response {
 	return resp
 }
 
-func SuccessResponse(err error) *Response {
+func SuccessResponse() *Response {
 	resp := new(Response)
 	resp.Code = 200
 	resp.Msg = "成功"
