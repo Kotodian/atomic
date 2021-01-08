@@ -53,6 +53,10 @@ func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 		log.Error(atomic_error.ErrPasswordWrong, ctx)
 		return atomic_error.ErrPasswordWrong
 	}
+	u.Id = tmp.Id
+	u.Nickname = tmp.Nickname
+	u.Phone = tmp.Phone
+	u.Email = tmp.Email
 
 	log.Info("登录成功", ctx)
 

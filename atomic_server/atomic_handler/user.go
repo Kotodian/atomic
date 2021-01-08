@@ -28,7 +28,11 @@ func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp 
 	// 返回token
 	resp.Res = common.SuccessResponse()
 	resp.Token = token
-
+	resp.UserInfo = new(pbUser.User)
+	err = proto_model.ProtoToModel(m, resp.UserInfo)
+	if err != nil {
+		return err
+	}
 	return
 }
 
