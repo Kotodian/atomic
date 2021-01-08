@@ -49,7 +49,10 @@ func BlogServiceRegistry(port int) {
 	if err != nil {
 		return
 	}
-
+	err = pbBlog.RegisterCategoryServiceHandler(srv.Server(), new(atomic_handler.CategoryHandler))
+	if err != nil {
+		return
+	}
 	if srv != nil {
 		if err = srv.Run(); err != nil {
 			panic(err)
