@@ -71,11 +71,13 @@ func (u *UserHandler) Logout(ctx context.Context, req *pbUser.LogoutRequest, res
 	m := &user.User{}
 	err = proto_model.ProtoToModel(req, m)
 	if err != nil {
-		return err
+		resp.Res = common.ServerErrResponse(err)
+		return
 	}
 	err = atomic_service.Logout(ctx, m)
 	if err != nil {
-		return err
+		resp.Res = common.ServerErrResponse(err)
+		return
 	}
 	return nil
 }
