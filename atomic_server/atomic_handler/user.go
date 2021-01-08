@@ -73,7 +73,7 @@ func (u *UserHandler) Logout(ctx context.Context, req *pbUser.LogoutRequest, res
 	if err != nil {
 		return err
 	}
-	err = atomic_service.Logout(ctx, m, req.Token)
+	err = atomic_service.Logout(ctx, m)
 	if err != nil {
 		return err
 	}
