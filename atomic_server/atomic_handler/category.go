@@ -5,15 +5,24 @@ import (
 	pbBlog "atomic/atomic_proto/blog"
 	"atomic/atomic_proto/common"
 	"atomic/atomic_server/atomic_service"
+	"atomic/internal/cache"
 	"atomic/internal/proto_model"
 	"context"
+	"time"
 )
 
 type CategoryHandler struct {
+	Cache *cache.Cache
+}
+
+func NewCategoryHandler() *CategoryHandler {
+	handler := &CategoryHandler{}
+	handler.Cache = cache.New(10*time.Hour, 10*time.Minute)
+	return handler
 }
 
 func (c *CategoryHandler) List(ctx context.Context, req *pbBlog.CategoryListRequest, resp *pbBlog.CategoryListResponse) (err error) {
-	categories, err := atomic_service.CommonCategoryList(ctx)
+	categories, err := atomic_service.CommonCategoryList(ctx, c.Cache)
 	if err != nil {
 		return
 	}
@@ -37,7 +46,7 @@ func (c *CategoryHandler) Create(ctx context.Context, req *pbBlog.CategoryCreate
 		resp.Res = common.ServerErrResponse(err)
 		return
 	}
-	err = atomic_service.CategoryInsert(ctx, m)
+	err = atomic_service.CategoryInsert(ctx, m, c.Cache)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return
@@ -52,7 +61,7 @@ func (c *CategoryHandler) Update(ctx context.Context, req *pbBlog.CategoryUpdate
 		resp.Res = common.ServerErrResponse(err)
 		return
 	}
-	err = atomic_service.CategoryUpdate(ctx, m)
+	err = atomic_service.CategoryUpdate(ctx, m, c.Cache)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return
@@ -67,7 +76,7 @@ func (c *CategoryHandler) Delete(ctx context.Context, req *pbBlog.CategoryDelete
 		resp.Res = common.ServerErrResponse(err)
 		return
 	}
-	err = atomic_service.CategoryDelete(ctx, m)
+	err = atomic_service.CategoryDelete(ctx, m, c.Cache)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return

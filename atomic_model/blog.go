@@ -6,6 +6,7 @@ import (
 )
 
 type Blog interface {
+	GetId() int64
 	// 创建时间 返回时间戳
 	ProposeTime(context.Context, *gorm.DB) int64
 	// 是否拥有节点
@@ -18,4 +19,10 @@ type Blog interface {
 	Update(context.Context, *gorm.DB) error
 	// 删除
 	Delete(context.Context, *gorm.DB) error
+	// 增加或减少收藏数
+	UpdateCollection(context.Context, *gorm.DB, bool) error
+	// 增加或减少点赞数
+	UpdateKudos(context.Context, *gorm.DB, bool) error
+	// 增加浏览数
+	UpdateBrowse(context.Context, *gorm.DB) error
 }

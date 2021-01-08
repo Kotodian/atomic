@@ -13,11 +13,11 @@ type User interface {
 	// 获取别名
 	NickName(context.Context, *gorm.DB) (string, error)
 	// 评论博客
-	CommentBlog(context.Context, *gorm.DB, Blog) error
+	CommentBlog(context.Context, *gorm.DB, Blog, string) error
 	// 收藏博客
-	CollectBlog(context.Context, *gorm.DB, Blog) error
+	CollectBlog(context.Context, *gorm.DB, Blog, bool) error
 	// 查看博客
 	BrowseBlog(context.Context, *gorm.DB, Blog) error
 	// 点赞博客
-	KudosBlog(context.Context, *gorm.DB, Blog) error
+	KudosBlog(context.Context, *gorm.DB, Blog, bool) error
 }

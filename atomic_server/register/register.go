@@ -26,7 +26,7 @@ func UserServiceRegister(port int) {
 
 	srv := register(port, service.InnerUser)
 
-	err := pbUser.RegisterUserServiceHandler(srv.Server(), new(atomic_handler.UserHandler))
+	err := pbUser.RegisterUserServiceHandler(srv.Server(), atomic_handler.NewUserHandler())
 
 	if err != nil {
 		return
@@ -44,12 +44,12 @@ func BlogServiceRegistry(port int) {
 
 	srv := register(port, service.InnerBlog)
 
-	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), new(atomic_handler.BlogHandler))
+	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), atomic_handler.NewBlogHandler())
 
 	if err != nil {
 		return
 	}
-	err = pbBlog.RegisterCategoryServiceHandler(srv.Server(), new(atomic_handler.CategoryHandler))
+	err = pbBlog.RegisterCategoryServiceHandler(srv.Server(), atomic_handler.NewCategoryHandler())
 	if err != nil {
 		return
 	}
@@ -58,7 +58,6 @@ func BlogServiceRegistry(port int) {
 			panic(err)
 		}
 	}
-
 }
 
 func register(port int, srvName string) micro.Service {

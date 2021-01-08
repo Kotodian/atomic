@@ -4,10 +4,11 @@ import (
 	"atomic/atomic_model"
 	"atomic/atomic_model/category"
 	"atomic/atomic_store"
+	"atomic/internal/cache"
 	"context"
 )
 
-func CommonCategoryList(ctx context.Context) ([]*category.Category, error) {
+func CommonCategoryList(ctx context.Context, ca *cache.Cache) ([]*category.Category, error) {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return nil, err
@@ -19,7 +20,7 @@ func CommonCategoryList(ctx context.Context) ([]*category.Category, error) {
 	return categories, nil
 }
 
-func CategoryInsert(ctx context.Context, cg atomic_model.Category) error {
+func CategoryInsert(ctx context.Context, cg atomic_model.Category, ca *cache.Cache) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -28,7 +29,7 @@ func CategoryInsert(ctx context.Context, cg atomic_model.Category) error {
 	return cg.Insert(ctx, db)
 }
 
-func CategoryUpdate(ctx context.Context, cg atomic_model.Category) error {
+func CategoryUpdate(ctx context.Context, cg atomic_model.Category, ca *cache.Cache) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -37,7 +38,7 @@ func CategoryUpdate(ctx context.Context, cg atomic_model.Category) error {
 	return cg.Update(ctx, db)
 }
 
-func CategoryDelete(ctx context.Context, cg atomic_model.Category) error {
+func CategoryDelete(ctx context.Context, cg atomic_model.Category, ca *cache.Cache) error {
 
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {

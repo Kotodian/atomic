@@ -6,6 +6,7 @@ import (
 	"atomic/internal/log"
 	"context"
 	"gorm.io/gorm"
+	"time"
 )
 
 type CommonBlog struct {
@@ -31,9 +32,54 @@ type CommonBlog struct {
 	Collection int `gorm:"collection"`
 }
 
+type Cache struct {
+	Browse     int `json:"browse"`
+	Kudos      int `json:"kudos"`
+	Collection int `json:"collection"`
+}
+
+func (c *CommonBlog) GetId() int64 {
+	return c.Id
+}
+
 const (
 	blog = "blogs"
 )
+
+func (c *CommonBlog) UpdateCollection(ctx context.Context, db *gorm.DB, add bool) error {
+	if add {
+		c.Collection++
+	} else {
+		c.Collection--
+	}
+	err := c.Update(ctx, db)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *CommonBlog) UpdateKudos(ctx context.Context, db *gorm.DB, add bool) error {
+	if add {
+		c.Kudos++
+	} else {
+		c.Kudos--
+	}
+	err := c.Update(ctx, db)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *CommonBlog) UpdateBrowse(ctx context.Context, db *gorm.DB) error {
+	c.Browse++
+	err := c.Update(ctx, db)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (c *CommonBlog) Update(ctx context.Context, db *gorm.DB) error {
 	panic("implement me")
@@ -45,6 +91,8 @@ func (c *CommonBlog) Delete(ctx context.Context, db *gorm.DB) error {
 		log.Error(err, ctx)
 		return atomic_error.ErrDeleteBlog
 	}
+	log.Info("博客删除成功", ctx)
+
 	return nil
 }
 
@@ -62,10 +110,14 @@ func (c *CommonBlog) CreateNode(ctx context.Context, db *gorm.DB, node atomic_mo
 
 func (c *CommonBlog) Insert(ctx context.Context, db *gorm.DB, username string) error {
 	c.Username = username
+	c.CreateAt = time.Now().Unix()
+	c.LastUpdateAt = time.Now().Unix()
 	err := db.Table(blog).WithContext(ctx).Create(c).Error
 	if err != nil {
 		log.Error(err)
 		return atomic_error.ErrCreateBlog
 	}
+	log.Info("博客创建成功", ctx)
+
 	return nil
 }

@@ -2,6 +2,8 @@ package user
 
 import (
 	"atomic/atomic_model"
+	"atomic/atomic_model/collection"
+	"atomic/atomic_model/comment"
 	"atomic/internal/atomic_error"
 	"atomic/internal/encrypt"
 	"atomic/internal/log"
@@ -21,16 +23,53 @@ type User struct {
 	Status   string `gorm:"-"`
 }
 
-func (u *User) CommentBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
-	panic("implement me")
+const user = "users"
+
+const (
+	Offline  = "offline"
+	Online   = "online"
+	Disabled = "disabled"
+)
+
+func (u *User) CommentBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog, comm string) error {
+	if u.Status != Online {
+		return atomic_error.ErrUserNotOnline
+	}
+
+	modelComment := &comment.Comment{}
+	modelComment.UserId = u.Id
+	modelComment.BlogId = blog.GetId()
+	modelComment.Content = comm
+	err := modelComment.Create(ctx, db)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *User) BrowseBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
-	panic("implement me")
+	if u.Status != Online {
+		return atomic_error.ErrUserNotOnline
+	}
+
+	err := blog.UpdateBrowse(ctx, db)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (u *User) KudosBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
-	panic("implement me")
+func (u *User) KudosBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog, add bool) error {
+	if u.Status != Online {
+		return atomic_error.ErrUserNotOnline
+	}
+
+	err := blog.UpdateKudos(ctx, db, add)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (u *User) NickName(ctx context.Context, db *gorm.DB) (string, error) {
@@ -43,14 +82,6 @@ func (u *User) NickName(ctx context.Context, db *gorm.DB) (string, error) {
 	}
 	return tmp.Nickname, nil
 }
-
-const user = "users"
-
-const (
-	Offline  = "offline"
-	Online   = "online"
-	Disabled = "disabled"
-)
 
 func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 	tmp := &User{}
@@ -76,37 +107,26 @@ func (u *User) Login(ctx context.Context, db *gorm.DB) error {
 }
 
 func (u *User) CreateBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
-	tmp := &User{}
-
-	err := db.WithContext(ctx).Table(user).Where("username = ?", u.Username).First(&tmp).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return atomic_error.ErrUserNotExists
-	}
 
 	if u.Status != Online {
 		return atomic_error.ErrUserNotOnline
 	}
 
-	err = blog.Insert(ctx, db, u.Username)
+	err := blog.Insert(ctx, db, u.Username)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func (u *User) DeleteBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
-	tmp := &User{}
-
-	err := db.WithContext(ctx).Table(user).Where("username = ?", u.Username).First(&tmp).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return atomic_error.ErrUserNotExists
-	}
 
 	if u.Status != Online {
 		return atomic_error.ErrUserNotOnline
 	}
 
-	err = blog.Delete(ctx, db)
+	err := blog.Delete(ctx, db)
 	if err != nil {
 		return err
 	}
@@ -114,8 +134,33 @@ func (u *User) DeleteBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Bl
 	return nil
 }
 
-func (u *User) CollectBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
-	panic("implement me")
+func (u *User) CollectBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog, add bool) error {
+	collect := &collection.Collection{}
+	collect.BlogId = blog.GetId()
+	collect.UserId = u.Id
+
+	if u.Status != Online {
+		return atomic_error.ErrUserNotOnline
+	}
+
+	if add {
+		err := collect.Create(ctx, db)
+		if err != nil {
+			return err
+		}
+	} else {
+		err := collect.Delete(ctx, db)
+		if err != nil {
+			return err
+		}
+	}
+
+	err := blog.UpdateCollection(ctx, db, add)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (u *User) Register(ctx context.Context, db *gorm.DB) error {
@@ -130,7 +175,15 @@ func (u *User) Register(ctx context.Context, db *gorm.DB) error {
 }
 
 func (u *User) Update(ctx context.Context, db *gorm.DB) error {
-	err := db.WithContext(ctx).Where("id = ?", u.Id).Updates(u).Error
+	if u.Status != Online {
+		return atomic_error.ErrUserNotOnline
+	}
+	var err error
+	if u.Id > 0 {
+		err = db.WithContext(ctx).Table(user).Where("id = ?", u.Id).Updates(u).Error
+	} else if u.Username != "" {
+		err = db.WithContext(ctx).Table(user).Where("username = ?", u.Username).Updates(u).Error
+	}
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Error(err, ctx)
 		return atomic_error.ErrUserNotExists
@@ -139,5 +192,18 @@ func (u *User) Update(ctx context.Context, db *gorm.DB) error {
 		return atomic_error.ErrUpdate
 	}
 
+	return nil
+}
+
+func (u *User) Get(ctx context.Context, db *gorm.DB) error {
+	var err error
+	if u.Id > 0 {
+		err = db.WithContext(ctx).Table(user).Where("id = ?", u.Id).Updates(u).Error
+	} else if u.Username != "" {
+		err = db.WithContext(ctx).Table(user).Where("username = ?", u.Username).Updates(u).Error
+	}
+	if err != nil {
+		return err
+	}
 	return nil
 }
