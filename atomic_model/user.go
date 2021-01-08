@@ -12,6 +12,12 @@ type User interface {
 	Update(context.Context, *gorm.DB) error
 	// 获取别名
 	NickName(context.Context, *gorm.DB) (string, error)
+	// 评论博客
+	CommentBlog(context.Context, *gorm.DB, Blog) error
 	// 收藏博客
 	CollectBlog(context.Context, *gorm.DB, Blog) error
+	// 查看博客
+	BrowseBlog(context.Context, *gorm.DB, Blog) error
+	// 点赞博客
+	KudosBlog(context.Context, *gorm.DB, Blog) error
 }

@@ -9,11 +9,26 @@ import (
 )
 
 type CommonBlog struct {
-	Id         int64  `gorm:"id"`
-	Username   string `gorm:"username"`
-	CategoryId int64  `gorm:"category_id"`
-	Title      string `gorm:"title"`
-	Content    string `gorm:"type:longtext;content"`
+	// Id 唯一表示
+	Id int64 `gorm:"id"`
+	// username 用户名
+	Username string `gorm:"username"`
+	// categoryId 类别
+	CategoryId int64 `gorm:"category_id"`
+	// title 标题
+	Title string `gorm:"title"`
+	// 发表时间
+	CreateAt int64 `gorm:"create_at"`
+	// 上次修改时间
+	LastUpdateAt int64 `gorm:"last_update_at"`
+	// 文章内容
+	Content string `gorm:"type:longtext;content"`
+	// 浏览次数
+	Browse int `gorm:"browse"`
+	// 点赞
+	Kudos int `gorm:"kudos"`
+	// 收藏
+	Collection int `gorm:"collection"`
 }
 
 const (

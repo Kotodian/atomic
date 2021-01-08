@@ -21,6 +21,18 @@ type User struct {
 	Status   string `gorm:"-"`
 }
 
+func (u *User) CommentBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
+	panic("implement me")
+}
+
+func (u *User) BrowseBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
+	panic("implement me")
+}
+
+func (u *User) KudosBlog(ctx context.Context, db *gorm.DB, blog atomic_model.Blog) error {
+	panic("implement me")
+}
+
 func (u *User) NickName(ctx context.Context, db *gorm.DB) (string, error) {
 	tmp := &User{}
 
@@ -118,11 +130,11 @@ func (u *User) Register(ctx context.Context, db *gorm.DB) error {
 }
 
 func (u *User) Update(ctx context.Context, db *gorm.DB) error {
-	err := db.WithContext(ctx).Updates(u).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
+	err := db.WithContext(ctx).Where("id = ?", u.Id).Updates(u).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Error(err, ctx)
 		return atomic_error.ErrUserNotExists
-	} else {
+	} else if err != nil {
 		log.Error(err, ctx)
 		return atomic_error.ErrUpdate
 	}

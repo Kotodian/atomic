@@ -18,6 +18,8 @@ package cmd
 import (
 	"atomic/atomic_model/blog"
 	"atomic/atomic_model/category"
+	"atomic/atomic_model/collection"
+	"atomic/atomic_model/comment"
 	"atomic/atomic_model/user"
 	"atomic/atomic_store"
 	"context"
@@ -45,7 +47,18 @@ to quickly create a Cobra application.`,
 			if err != nil {
 				panic(err)
 			}
-			err = db.AutoMigrate(&user.User{}, &blog.CommonBlog{}, &category.Category{})
+			err = db.AutoMigrate(
+				// 用户
+				&user.User{},
+				// 博客
+				&blog.CommonBlog{},
+				// 目录
+				&category.Category{},
+				// 评论
+				&comment.Comment{},
+				// 收藏
+				&collection.Collection{},
+			)
 			if err != nil {
 				panic(err)
 			}
