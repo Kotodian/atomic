@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"atomic/atomic_model/blog"
+	"atomic/atomic_model/category"
 	"atomic/atomic_model/user"
 	"atomic/atomic_store"
 	"context"
@@ -24,7 +25,7 @@ import (
 )
 
 var (
-	category = "mysql"
+	cg = "mysql"
 )
 
 // dbCmd represents the db command
@@ -38,13 +39,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if category == "mysql" {
+		if cg == "mysql" {
 			mysql := &atomic_store.Mysql{}
 			db, err := atomic_store.DefaultDatabase(context.Background(), mysql)
 			if err != nil {
 				panic(err)
 			}
-			err = db.AutoMigrate(&user.User{}, &blog.CommonBlog{})
+			err = db.AutoMigrate(&user.User{}, &blog.CommonBlog{}, &category.Category{})
 			if err != nil {
 				panic(err)
 			}
@@ -64,5 +65,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// dbCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	dbCmd.Flags().StringVarP(&category, "category", "c", "mysql", "迁移数据库")
+	dbCmd.Flags().StringVarP(&cg, "category", "c", "mysql", "迁移数据库")
 }

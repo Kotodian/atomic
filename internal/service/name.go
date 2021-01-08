@@ -6,6 +6,7 @@ const (
 )
 
 const (
-	InnerBlog = "go.micro.srv.blog"
-	APIBlog   = "go.micro.api.blog"
+	InnerBlog   = "go.micro.srv.blog"
+	APIBlog     = "go.micro.api.blog"
+	APICategory = "go.micro.api.category"
 )

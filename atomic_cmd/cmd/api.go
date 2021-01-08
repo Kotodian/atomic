@@ -45,6 +45,10 @@ to quickly create a Cobra application.`,
 		if webService == "blog" {
 			controller.WebBlog(e, apiPort)
 		}
+
+		if webService == "category" {
+			controller.WebCategory(e, apiPort)
+		}
 	},
 }
 

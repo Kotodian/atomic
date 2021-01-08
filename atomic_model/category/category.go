@@ -8,12 +8,12 @@ import (
 )
 
 type Category struct {
-	ID   int64  `json:"id"`
+	Id   int64  `json:"id"`
 	Name string `json:"name"`
 }
 
 const (
-	category = "category"
+	category = "categories"
 )
 
 func (c *Category) Insert(ctx context.Context, db *gorm.DB) error {
@@ -26,7 +26,7 @@ func (c *Category) Insert(ctx context.Context, db *gorm.DB) error {
 }
 
 func (c *Category) Update(ctx context.Context, db *gorm.DB) error {
-	err := db.Table(category).WithContext(ctx).Where("id = ?", c.ID).Updates(c).Error
+	err := db.Table(category).WithContext(ctx).Where("id = ?", c.Id).Updates(c).Error
 	if err != nil {
 		log.Error(err, ctx)
 		return atomic_error.ErrUpdateCategory
@@ -44,7 +44,7 @@ func List(ctx context.Context, db *gorm.DB) (categories []*Category, err error) 
 }
 
 func (c *Category) Delete(ctx context.Context, db *gorm.DB) error {
-	err := db.Table(category).WithContext(ctx).Where("id = ?", c.ID).Delete(c).Error
+	err := db.Table(category).WithContext(ctx).Where("id = ?", c.Id).Delete(c).Error
 	if err != nil {
 		log.Error(err, ctx)
 		return atomic_error.ErrDeleteCategory
