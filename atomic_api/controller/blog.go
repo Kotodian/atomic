@@ -37,6 +37,7 @@ func WebBlog(engine *gin.Engine, port int) {
 		micro.WrapClient(hystrix.NewClientWrapper()),
 		micro.Broker(kafka.NewBroker(broker.Addrs(kafka_msg.URL...))),
 	).Client()
+	// 消息队列
 	if client.Options().Broker == nil {
 		panic("broker can't be nil")
 	}

@@ -3,12 +3,15 @@ package controller
 import (
 	pbBlog "atomic/atomic_proto/blog"
 	"atomic/internal/etcd"
+	"atomic/internal/kafka_msg"
 	"atomic/internal/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/broker"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/web"
+	"github.com/micro/go-plugins/broker/kafka"
 	"github.com/micro/go-plugins/registry/etcdv3"
 	"github.com/micro/go-plugins/wrapper/breaker/hystrix"
 	"net/http"
@@ -31,7 +34,18 @@ func WebCategory(engine *gin.Engine, port int) {
 		micro.Name(service.InnerBlog),
 		micro.Registry(reg),
 		micro.WrapClient(hystrix.NewClientWrapper()),
+		micro.Broker(kafka.NewBroker(broker.Addrs(kafka_msg.URL...))),
 	).Client()
+
+	// 消息队列
+	if client.Options().Broker == nil {
+		panic("broker can't be nil")
+	}
+	err := client.Options().Broker.Connect()
+	if err != nil {
+		panic("cannot connect broker")
+	}
+
 	cliCategoryService := pbBlog.NewCategoryService(service.InnerBlog, client)
 
 	routerCategory := engine.Group("category")
@@ -88,7 +102,7 @@ func WebCategory(engine *gin.Engine, port int) {
 		ctx.JSON(http.StatusOK, resp)
 	})
 
-	err := srv.Init()
+	err = srv.Init()
 	if err != nil {
 		panic(err)
 	}
