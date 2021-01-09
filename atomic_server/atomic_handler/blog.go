@@ -7,19 +7,15 @@ import (
 	"atomic/atomic_proto/common"
 	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_service"
-	"atomic/internal/cache"
 	"atomic/internal/proto_model"
 	"context"
-	"time"
 )
 
 type BlogHandler struct {
-	Cache *cache.Cache
 }
 
 func NewBlogHandler() *BlogHandler {
 	handler := &BlogHandler{}
-	handler.Cache = cache.New(10*time.Hour, 10*time.Minute)
 	return handler
 }
 
@@ -36,7 +32,7 @@ func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.BlogDeleteRequest,
 		return err
 	}
 
-	err = atomic_service.DeleteBlog(ctx, userModel, blogModel, u.Cache)
+	err = atomic_service.DeleteBlog(ctx, userModel, blogModel)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return
@@ -66,7 +62,7 @@ func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.BlogCreateRequest,
 		return
 	}
 
-	err = atomic_service.CreateBlog(ctx, userModel, blogModel, u.Cache)
+	err = atomic_service.CreateBlog(ctx, userModel, blogModel)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return

@@ -27,7 +27,7 @@ func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp 
 	if err != nil {
 		return
 	}
-	token, err := atomic_service.Login(ctx, m, u.Cache)
+	token, err := atomic_service.Login(ctx, m)
 
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
@@ -51,7 +51,7 @@ func (u *UserHandler) Register(ctx context.Context, req *pbUser.RegisterRequest,
 	if err != nil {
 		return
 	}
-	err = atomic_service.Register(ctx, m, u.Cache)
+	err = atomic_service.Register(ctx, m)
 
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
@@ -68,7 +68,7 @@ func (u *UserHandler) Update(ctx context.Context, req *pbUser.UpdateRequest, res
 	if err != nil {
 		return
 	}
-	err = atomic_service.Update(ctx, m, u.Cache)
+	err = atomic_service.Update(ctx, m)
 
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
@@ -87,7 +87,7 @@ func (u *UserHandler) Logout(ctx context.Context, req *pbUser.LogoutRequest, res
 		resp.Res = common.ServerErrResponse(err)
 		return
 	}
-	err = atomic_service.Logout(ctx, m, u.Cache)
+	err = atomic_service.Logout(ctx, m)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return

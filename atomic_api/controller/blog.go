@@ -16,6 +16,7 @@ import (
 	"github.com/micro/go-plugins/registry/etcdv3"
 	"github.com/micro/go-plugins/wrapper/breaker/hystrix"
 	"net/http"
+	"strconv"
 )
 
 func WebBlog(engine *gin.Engine, port int) {
@@ -93,6 +94,37 @@ func WebBlog(engine *gin.Engine, port int) {
 			return
 		}
 		ctx.JSON(http.StatusOK, response)
+	})
+
+	routerBlog.POST("/collect", func(ctx *gin.Context) {
+		req := &struct {
+			UserId int64 `json:"user_id"`
+			BlogId int64 `json:"blog_id"`
+			Add    bool  `json:"add"`
+		}{}
+		err := ctx.ShouldBindJSON(req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+		var add string
+		if req.Add {
+			add = "add"
+		} else {
+			add = "reduce"
+		}
+		err = client.Options().Broker.Publish("collect", &broker.Message{
+			Header: map[string]string{
+				"userId": strconv.FormatInt(req.UserId, 10),
+				"blogId": strconv.FormatInt(req.BlogId, 10),
+			},
+			Body: []byte(add),
+		})
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, "收藏成功")
 	})
 
 	err = srv.Init()

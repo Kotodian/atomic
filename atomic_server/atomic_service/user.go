@@ -6,7 +6,6 @@ import (
 	"atomic/atomic_store"
 	"atomic/internal/atomic_error"
 	"atomic/internal/auth/jwt"
-	"atomic/internal/cache"
 	"atomic/internal/date"
 	"atomic/internal/etcd"
 	"atomic/internal/log"
@@ -16,7 +15,7 @@ import (
 	"time"
 )
 
-func Login(ctx context.Context, u atomic_model.User, ca *cache.Cache) (string, error) {
+func Login(ctx context.Context, u atomic_model.User) (string, error) {
 	// mysql连接 可以自行拓展
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
@@ -89,7 +88,7 @@ func Login(ctx context.Context, u atomic_model.User, ca *cache.Cache) (string, e
 	}
 }
 
-func Register(ctx context.Context, user atomic_model.User, ca *cache.Cache) error {
+func Register(ctx context.Context, user atomic_model.User) error {
 
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
@@ -104,7 +103,7 @@ func Register(ctx context.Context, user atomic_model.User, ca *cache.Cache) erro
 	return nil
 }
 
-func Update(ctx context.Context, user atomic_model.User, ca *cache.Cache) error {
+func Update(ctx context.Context, user atomic_model.User) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -117,7 +116,7 @@ func Update(ctx context.Context, user atomic_model.User, ca *cache.Cache) error 
 
 	return nil
 }
-func Logout(ctx context.Context, u atomic_model.User, ca *cache.Cache) error {
+func Logout(ctx context.Context, u atomic_model.User) error {
 
 	etcdChan := make(chan bool)
 	// 更新状态

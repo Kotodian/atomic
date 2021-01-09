@@ -3,6 +3,7 @@ package register
 import (
 	pbBlog "atomic/atomic_proto/blog"
 	pbUser "atomic/atomic_proto/user"
+	"atomic/atomic_server/atomic_broker"
 	"atomic/atomic_server/atomic_handler"
 	"atomic/internal/atomic_error"
 	"atomic/internal/etcd"
@@ -43,15 +44,22 @@ func BlogServiceRegistry(port int) {
 	log.Debug("注册博客服务")
 
 	srv := register(port, service.InnerBlog)
-
-	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), atomic_handler.NewBlogHandler())
+	blogHandler := atomic_handler.NewBlogHandler()
+	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), blogHandler)
 
 	if err != nil {
 		return
 	}
-	err = pbBlog.RegisterCategoryServiceHandler(srv.Server(), atomic_handler.NewCategoryHandler())
+	categoryHandler := atomic_handler.NewCategoryHandler()
+	err = pbBlog.RegisterCategoryServiceHandler(srv.Server(), categoryHandler)
 	if err != nil {
 		return
+	}
+	// 订阅收藏博客的消息队列
+	_, err = srv.Options().Broker.Subscribe("collect", atomic_broker.CollectBlog)
+
+	if err != nil {
+		panic(err)
 	}
 	if srv != nil {
 		if err = srv.Run(); err != nil {

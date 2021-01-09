@@ -4,14 +4,13 @@ import (
 	"atomic/atomic_model"
 	blog_model "atomic/atomic_model/blog"
 	"atomic/atomic_store"
-	"atomic/internal/cache"
 	"atomic/internal/etcd"
 	"context"
 	"encoding/json"
 	"strconv"
 )
 
-func CreateBlog(ctx context.Context, user atomic_model.User, blog atomic_model.Blog, ca *cache.Cache) error {
+func CreateBlog(ctx context.Context, user atomic_model.User, blog atomic_model.Blog) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -59,7 +58,7 @@ func CreateBlog(ctx context.Context, user atomic_model.User, blog atomic_model.B
 	return nil
 }
 
-func DeleteBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog, ca *cache.Cache) error {
+func DeleteBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -92,12 +91,7 @@ func DeleteBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog
 	return nil
 }
 
-func CollectBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog, add bool, ca *cache.Cache) error {
-	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
-	if err != nil {
-		return err
-	}
-
+func CollectBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog, add bool) error {
 	cli, err := etcd.NewClient(ctx, etcd.DefaultTimeout)
 	if err != nil {
 		return err
@@ -108,6 +102,11 @@ func CollectBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blo
 	if err != nil {
 		return err
 	}
+	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
+	if err != nil {
+		return err
+	}
+
 	if res != nil {
 		u.SetStatus(string(res))
 	} else {
