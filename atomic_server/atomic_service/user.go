@@ -1,6 +1,7 @@
 package atomic_service
 
 import (
+	"atomic/atomic_model"
 	"atomic/atomic_model/user"
 	"atomic/atomic_store"
 	"atomic/internal/atomic_error"
@@ -11,10 +12,11 @@ import (
 	"atomic/internal/log"
 	"atomic/internal/redis"
 	"context"
+	"strconv"
 	"time"
 )
 
-func Login(ctx context.Context, u *user.User, ca *cache.Cache) (string, error) {
+func Login(ctx context.Context, u atomic_model.User, ca *cache.Cache) (string, error) {
 	// mysql连接 可以自行拓展
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
@@ -40,7 +42,7 @@ func Login(ctx context.Context, u *user.User, ca *cache.Cache) (string, error) {
 
 		defer cli.Close()
 
-		e = etcd.Put(c, cli, u.Username, user.Online, -1)
+		e = etcd.Put(c, cli, strconv.FormatInt(u.GetID(), 10), user.Online, -1)
 
 		if e != nil {
 			log.Error(e, ctx)
@@ -60,7 +62,7 @@ func Login(ctx context.Context, u *user.User, ca *cache.Cache) (string, error) {
 	}
 	// 更新在线人数
 	go func(c context.Context) {
-		_, e := redisConn.Do("setBit", time.Now().Format(date.Layout), u.Id, 1)
+		_, e := redisConn.Do("setBit", time.Now().Format(date.Layout), u.GetID(), 1)
 		if e != nil {
 			log.Error(e, ctx)
 			redisChan <- false
@@ -74,8 +76,8 @@ func Login(ctx context.Context, u *user.User, ca *cache.Cache) (string, error) {
 	redisStat := <-redisChan
 
 	if etcdStat && redisStat {
-		token, _ := jwt.GenToken(u.Username)
-		_, err := redisConn.Do("set", u.Username, token)
+		token, _ := jwt.GenToken(u.GetUsername())
+		_, err := redisConn.Do("set", u.GetUsername(), token)
 		if err != nil {
 			return "", err
 		}
@@ -87,7 +89,7 @@ func Login(ctx context.Context, u *user.User, ca *cache.Cache) (string, error) {
 	}
 }
 
-func Register(ctx context.Context, user *user.User, ca *cache.Cache) error {
+func Register(ctx context.Context, user atomic_model.User, ca *cache.Cache) error {
 
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
@@ -102,7 +104,7 @@ func Register(ctx context.Context, user *user.User, ca *cache.Cache) error {
 	return nil
 }
 
-func Update(ctx context.Context, user *user.User, ca *cache.Cache) error {
+func Update(ctx context.Context, user atomic_model.User, ca *cache.Cache) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -115,7 +117,7 @@ func Update(ctx context.Context, user *user.User, ca *cache.Cache) error {
 
 	return nil
 }
-func Logout(ctx context.Context, u *user.User, ca *cache.Cache) error {
+func Logout(ctx context.Context, u atomic_model.User, ca *cache.Cache) error {
 
 	etcdChan := make(chan bool)
 	// 更新状态
@@ -129,7 +131,7 @@ func Logout(ctx context.Context, u *user.User, ca *cache.Cache) error {
 
 		defer cli.Close()
 
-		e = etcd.Put(c, cli, u.Username, user.Offline, -1)
+		e = etcd.Put(c, cli, strconv.FormatInt(u.GetID(), 10), user.Offline, -1)
 
 		if e != nil {
 			log.Error(e, ctx)
@@ -149,13 +151,13 @@ func Logout(ctx context.Context, u *user.User, ca *cache.Cache) error {
 		}
 		defer redisConn.Close()
 
-		_, e = redisConn.Do("setBit", time.Now().Format(date.Layout), u.Id, 0)
+		_, e = redisConn.Do("setBit", time.Now().Format(date.Layout), u.GetID(), 0)
 		if e != nil {
 			log.Error(e, ctx)
 			redisChan <- false
 			return
 		}
-		_, e = redisConn.Do("del", u.Username)
+		_, e = redisConn.Do("del", u.GetUsername())
 		redisChan <- true
 	}(ctx)
 

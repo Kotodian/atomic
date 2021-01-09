@@ -3,7 +3,6 @@ package atomic_service
 import (
 	"atomic/atomic_model"
 	blog_model "atomic/atomic_model/blog"
-	"atomic/atomic_model/user"
 	"atomic/atomic_store"
 	"atomic/internal/cache"
 	"atomic/internal/etcd"
@@ -12,7 +11,7 @@ import (
 	"strconv"
 )
 
-func CreateBlog(ctx context.Context, user *user.User, blog atomic_model.Blog, ca *cache.Cache) error {
+func CreateBlog(ctx context.Context, user atomic_model.User, blog atomic_model.Blog, ca *cache.Cache) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -23,12 +22,12 @@ func CreateBlog(ctx context.Context, user *user.User, blog atomic_model.Blog, ca
 	}
 	defer cli.Close()
 
-	res, err := etcd.Get(ctx, cli, user.Username)
+	res, err := etcd.Get(ctx, cli, strconv.FormatInt(user.GetID(), 10))
 	if err != nil {
 		return err
 	}
 	if res != nil {
-		user.Status = string(res)
+		user.SetStatus(string(res))
 	} else {
 		err = user.Get(ctx, db)
 		if err != nil {
@@ -60,7 +59,7 @@ func CreateBlog(ctx context.Context, user *user.User, blog atomic_model.Blog, ca
 	return nil
 }
 
-func DeleteBlog(ctx context.Context, u *user.User, blog atomic_model.Blog, ca *cache.Cache) error {
+func DeleteBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog, ca *cache.Cache) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -72,12 +71,12 @@ func DeleteBlog(ctx context.Context, u *user.User, blog atomic_model.Blog, ca *c
 	}
 	defer cli.Close()
 
-	res, err := etcd.Get(ctx, cli, u.Username)
+	res, err := etcd.Get(ctx, cli, u.GetUsername())
 	if err != nil {
 		return err
 	}
 	if res != nil {
-		u.Status = string(res)
+		u.SetStatus(string(res))
 	} else {
 		err = u.Get(ctx, db)
 		if err != nil {
@@ -93,7 +92,7 @@ func DeleteBlog(ctx context.Context, u *user.User, blog atomic_model.Blog, ca *c
 	return nil
 }
 
-func CollectBlog(ctx context.Context, u *user.User, blog atomic_model.Blog, add bool, ca *cache.Cache) error {
+func CollectBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog, add bool, ca *cache.Cache) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -105,12 +104,12 @@ func CollectBlog(ctx context.Context, u *user.User, blog atomic_model.Blog, add 
 	}
 	defer cli.Close()
 
-	res, err := etcd.Get(ctx, cli, u.Username)
+	res, err := etcd.Get(ctx, cli, u.GetUsername())
 	if err != nil {
 		return err
 	}
 	if res != nil {
-		u.Status = string(res)
+		u.SetStatus(string(res))
 	} else {
 		err = u.Get(ctx, db)
 		if err != nil {

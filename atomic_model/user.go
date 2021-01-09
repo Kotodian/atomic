@@ -20,4 +20,20 @@ type User interface {
 	BrowseBlog(context.Context, *gorm.DB, Blog) error
 	// 点赞博客
 	KudosBlog(context.Context, *gorm.DB, Blog, bool) error
+	// 创建博客
+	CreateBlog(context.Context, *gorm.DB, Blog) error
+	// 删除博客
+	DeleteBlog(context.Context, *gorm.DB, Blog) error
+	// 获取用户名
+	GetUsername() string
+	// 获取id
+	GetID() int64
+	// 获取状态
+	GetStatus() string
+	// 修改状态
+	SetStatus(string)
+	// 注册用户
+	Register(context.Context, *gorm.DB) error
+	//
+	Get(context.Context, *gorm.DB) error
 }
