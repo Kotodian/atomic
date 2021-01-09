@@ -56,7 +56,7 @@ func BlogServiceRegistry(port int) {
 		return
 	}
 	// 订阅收藏博客的消息队列
-	_, err = srv.Options().Broker.Subscribe("collect", atomic_broker.CollectBlog)
+	_, err = Broker(srv).Subscribe("collect", atomic_broker.CollectBlog)
 
 	if err != nil {
 		panic(err)
@@ -89,10 +89,9 @@ func register(port int, srvName string) micro.Service {
 		micro.WrapHandler(wrapperTrace.NewHandlerWrapper(opentracing.GlobalTracer())),
 		micro.WrapHandler(limmiter.NewHandlerWrapper(100)),
 		micro.Registry(reg),
-		micro.Broker(kafka.NewBroker(func(opt *broker.Options) {
-			opt.Addrs = kafka_msg.URL
-		})),
-	)
+		micro.Broker(kafka.NewBroker(
+			broker.Addrs(kafka_msg.URL...),
+		)))
 
 	afterStart := func() error {
 		brk := srv.Options().Broker

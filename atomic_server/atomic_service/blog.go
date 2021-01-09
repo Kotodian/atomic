@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func CreateBlog(ctx context.Context, user atomic_model.User, blog atomic_model.Blog) error {
+func CreateBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -21,20 +21,20 @@ func CreateBlog(ctx context.Context, user atomic_model.User, blog atomic_model.B
 	}
 	defer cli.Close()
 
-	res, err := etcd.Get(ctx, cli, strconv.FormatInt(user.GetID(), 10))
+	res, err := etcd.Get(ctx, cli, strconv.FormatInt(u.GetID(), 10))
 	if err != nil {
 		return err
 	}
 	if res != nil {
-		user.SetStatus(string(res))
+		u.SetStatus(string(res))
 	} else {
-		err = user.Get(ctx, db)
+		err = u.Get(ctx, db)
 		if err != nil {
 			return err
 		}
 	}
 
-	err = user.CreateBlog(ctx, db, blog)
+	err = u.CreateBlog(ctx, db, b)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func CreateBlog(ctx context.Context, user atomic_model.User, blog atomic_model.B
 		return err
 	}
 
-	err = etcd.Put(ctx, cli, strconv.FormatInt(blog.GetId(), 10), string(value), -1)
+	err = etcd.Put(ctx, cli, strconv.FormatInt(b.GetId(), 10), string(value), -1)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func CreateBlog(ctx context.Context, user atomic_model.User, blog atomic_model.B
 	return nil
 }
 
-func DeleteBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog) error {
+func DeleteBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) error {
 	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
 	if err != nil {
 		return err
@@ -83,7 +83,7 @@ func DeleteBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog
 		}
 	}
 
-	err = u.DeleteBlog(ctx, db, blog)
+	err = u.DeleteBlog(ctx, db, b)
 	if err != nil {
 		return err
 	}
@@ -91,7 +91,7 @@ func DeleteBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog
 	return nil
 }
 
-func CollectBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blog, add bool) error {
+func CollectBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog, add bool) error {
 	cli, err := etcd.NewClient(ctx, etcd.DefaultTimeout)
 	if err != nil {
 		return err
@@ -116,7 +116,7 @@ func CollectBlog(ctx context.Context, u atomic_model.User, blog atomic_model.Blo
 		}
 	}
 
-	err = u.CollectBlog(ctx, db, blog, add)
+	err = u.CollectBlog(ctx, db, b, add)
 	if err != nil {
 		return err
 	}

@@ -37,17 +37,17 @@ func WebBlog(engine *gin.Engine, port int) {
 		micro.Registry(reg),
 		micro.WrapClient(hystrix.NewClientWrapper()),
 		micro.Broker(kafka.NewBroker(broker.Addrs(kafka_msg.URL...))),
-	).Client()
+	)
 	// 消息队列
-	if client.Options().Broker == nil {
+	if Broker(client) == nil {
 		panic("broker can't be nil")
 	}
-	err := client.Options().Broker.Connect()
+	err := Broker(client).Connect()
 	if err != nil {
 		panic("cannot connect broker")
 	}
 
-	cliBlogService := pbBlog.NewBlogService(service.InnerBlog, client)
+	cliBlogService := pbBlog.NewBlogService(service.InnerBlog, client.Client())
 	routerBlog := engine.Group("blog")
 	//routerBlog.Use(middleware.JWTAuthMiddleware())
 
@@ -95,7 +95,7 @@ func WebBlog(engine *gin.Engine, port int) {
 		}
 		ctx.JSON(http.StatusOK, response)
 	})
-
+	// 用户收藏博客api接口
 	routerBlog.POST("/collect", func(ctx *gin.Context) {
 		req := &struct {
 			UserId int64 `json:"user_id"`
@@ -134,4 +134,8 @@ func WebBlog(engine *gin.Engine, port int) {
 	if err = srv.Run(); err != nil {
 		panic(err)
 	}
+}
+
+func Broker(srv micro.Service) broker.Broker {
+	return srv.Options().Broker
 }
