@@ -61,7 +61,6 @@ func BlogServiceRegistry(port int) {
 }
 
 func register(port int, srvName string) micro.Service {
-
 	// jaeger
 	t, io, err := trace.NewTracer(srvName, trace.JaegerAddr)
 	if err != nil {
@@ -100,4 +99,9 @@ func register(port int, srvName string) micro.Service {
 		micro.AfterStart(afterStart),
 	)
 	return srv
+}
+
+// 返回消息队列
+func Broker(srv micro.Service) broker.Broker {
+	return srv.Options().Broker
 }

@@ -22,14 +22,16 @@ func main() {
 		micro.Broker(kafkaBroker),
 	)
 
-	err := kafkaBroker.Connect()
+	srv.Init()
+	if srv.Options().Broker == nil {
+		panic("broker cannot be nil")
+	}
+	err := srv.Options().Broker.Connect()
 	if err != nil {
-		panic(err)
+		panic("broker cannot connect")
 	}
 
-	srv.Init()
-
-	err = kafkaBroker.Publish("greeter", &broker.Message{
+	err = srv.Options().Broker.Publish("greeter", &broker.Message{
 		Header: map[string]string{
 			"name": "lqk",
 		},
