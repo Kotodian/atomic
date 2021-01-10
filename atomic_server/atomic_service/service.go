@@ -1,13 +1,18 @@
 package atomic_service
 
-import "gorm.io/gorm"
+import (
+	"atomic/internal/cache"
+	"gorm.io/gorm"
+)
 
 type BlogService struct {
-	DB *gorm.DB `inject:""`
+	DB    *gorm.DB     `inject:""`
+	Cache *cache.Cache `inject:""`
 	// FIXME 自行扩展
 }
 
 type UserService struct {
-	DB *gorm.DB `inject:""`
+	DB    *gorm.DB     `inject:""`
+	Cache *cache.Cache `inject:""`
 	// FIXME 自行扩展
 }

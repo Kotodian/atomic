@@ -34,16 +34,15 @@ func UserServiceRegister(port int, handler *atomic_handler.UserHandler) {
 	run(srv)
 }
 
-func BlogServiceRegistry(port int, handler *atomic_handler.BlogHandler) {
+func BlogServiceRegistry(port int, blogHandler *atomic_handler.BlogHandler, categoryHandler *atomic_handler.CategoryHandler) {
 	log.Debug("注册博客服务")
 
 	srv := register(port, service.InnerBlog)
-	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), handler)
+	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), blogHandler)
 
 	if err != nil {
 		return
 	}
-	categoryHandler := &atomic_handler.CategoryHandler{}
 	err = pbBlog.RegisterCategoryServiceHandler(srv.Server(), categoryHandler)
 	if err != nil {
 		return

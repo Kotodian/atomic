@@ -17,11 +17,13 @@ package cmd
 
 import (
 	"atomic/atomic_server/atomic_handler"
-	"atomic/atomic_server/register"
 	"atomic/atomic_store"
+	"atomic/internal/cache"
+	"atomic/register"
 	"context"
 	"github.com/facebookarchive/inject"
 	"github.com/spf13/cobra"
+	"time"
 )
 
 var (
@@ -49,6 +51,10 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			panic(err)
 		}
+		err = graph.Provide(&inject.Object{Value: cache.New(10*time.Hour, 10*time.Minute)})
+		if err != nil {
+			panic(err)
+		}
 		if insideService == "user" {
 			handler := &atomic_handler.UserHandler{}
 			err = graph.Provide(&inject.Object{Value: handler})
@@ -63,8 +69,13 @@ to quickly create a Cobra application.`,
 		}
 
 		if insideService == "blog" {
-			handler := &atomic_handler.BlogHandler{}
-			err = graph.Provide(&inject.Object{Value: handler})
+			blogHandler := &atomic_handler.BlogHandler{}
+			err = graph.Provide(&inject.Object{Value: blogHandler})
+			if err != nil {
+				panic(err)
+			}
+			categoryHandler := &atomic_handler.CategoryHandler{}
+			err = graph.Provide(&inject.Object{Value: categoryHandler})
 			if err != nil {
 				panic(err)
 			}
@@ -72,7 +83,7 @@ to quickly create a Cobra application.`,
 			if err != nil {
 				panic(err)
 			}
-			register.BlogServiceRegistry(port, handler)
+			register.BlogServiceRegistry(port, blogHandler, categoryHandler)
 		}
 	},
 }
