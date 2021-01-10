@@ -46,6 +46,12 @@ github.com/eapache/go-resiliency/breaker
 github.com/eapache/go-xerial-snappy
 # github.com/eapache/queue v1.1.0
 github.com/eapache/queue
+# github.com/facebookarchive/inject v0.0.0-20180706035515-f23751cae28b
+## explicit
+github.com/facebookarchive/inject
+# github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691
+## explicit
+github.com/facebookgo/structtag
 # github.com/favadi/protoc-go-inject-tag v1.1.0
 ## explicit
 # github.com/gin-contrib/sse v0.1.0

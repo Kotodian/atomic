@@ -12,11 +12,7 @@ import (
 )
 
 type BlogHandler struct {
-}
-
-func NewBlogHandler() *BlogHandler {
-	handler := &BlogHandler{}
-	return handler
+	BlogService *atomic_service.BlogService `inject:""`
 }
 
 func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.BlogDeleteRequest, resp *pbBlog.BlogDeleteResponse) (err error) {
@@ -32,7 +28,7 @@ func (u *BlogHandler) Delete(ctx context.Context, req *pbBlog.BlogDeleteRequest,
 		return err
 	}
 
-	err = atomic_service.DeleteBlog(ctx, userModel, blogModel)
+	err = u.BlogService.DeleteBlog(ctx, userModel, blogModel)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return
@@ -62,7 +58,7 @@ func (u *BlogHandler) Create(ctx context.Context, req *pbBlog.BlogCreateRequest,
 		return
 	}
 
-	err = atomic_service.CreateBlog(ctx, userModel, blogModel)
+	err = u.BlogService.CreateBlog(ctx, userModel, blogModel)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return

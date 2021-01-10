@@ -3,18 +3,13 @@ package atomic_service
 import (
 	"atomic/atomic_model"
 	blog_model "atomic/atomic_model/blog"
-	"atomic/atomic_store"
 	"atomic/internal/etcd"
 	"context"
 	"encoding/json"
 	"strconv"
 )
 
-func CreateBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) error {
-	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
-	if err != nil {
-		return err
-	}
+func (s *BlogService) CreateBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) error {
 	cli, err := etcd.NewClient(ctx, etcd.DefaultTimeout)
 	if err != nil {
 		return err
@@ -28,13 +23,13 @@ func CreateBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) e
 	if res != nil {
 		u.SetStatus(string(res))
 	} else {
-		err = u.Get(ctx, db)
+		err = u.Get(ctx, s.DB)
 		if err != nil {
 			return err
 		}
 	}
 
-	err = u.CreateBlog(ctx, db, b)
+	err = u.CreateBlog(ctx, s.DB, b)
 	if err != nil {
 		return err
 	}
@@ -58,12 +53,7 @@ func CreateBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) e
 	return nil
 }
 
-func DeleteBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) error {
-	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
-	if err != nil {
-		return err
-	}
-
+func (s *BlogService) DeleteBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) error {
 	cli, err := etcd.NewClient(ctx, etcd.DefaultTimeout)
 	if err != nil {
 		return err
@@ -77,13 +67,13 @@ func DeleteBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) e
 	if res != nil {
 		u.SetStatus(string(res))
 	} else {
-		err = u.Get(ctx, db)
+		err = u.Get(ctx, s.DB)
 		if err != nil {
 			return err
 		}
 	}
 
-	err = u.DeleteBlog(ctx, db, b)
+	err = u.DeleteBlog(ctx, s.DB, b)
 	if err != nil {
 		return err
 	}
@@ -91,7 +81,7 @@ func DeleteBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog) e
 	return nil
 }
 
-func CollectBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog, add bool) error {
+func (s *BlogService) CollectBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog, add bool) error {
 	cli, err := etcd.NewClient(ctx, etcd.DefaultTimeout)
 	if err != nil {
 		return err
@@ -102,21 +92,17 @@ func CollectBlog(ctx context.Context, u atomic_model.User, b atomic_model.Blog, 
 	if err != nil {
 		return err
 	}
-	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
-	if err != nil {
-		return err
-	}
 
 	if res != nil {
 		u.SetStatus(string(res))
 	} else {
-		err = u.Get(ctx, db)
+		err = u.Get(ctx, s.DB)
 		if err != nil {
 			return err
 		}
 	}
 
-	err = u.CollectBlog(ctx, db, b, add)
+	err = u.CollectBlog(ctx, s.DB, b, add)
 	if err != nil {
 		return err
 	}

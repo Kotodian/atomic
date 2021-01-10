@@ -3,7 +3,6 @@ package atomic_service
 import (
 	"atomic/atomic_model"
 	"atomic/atomic_model/user"
-	"atomic/atomic_store"
 	"atomic/internal/atomic_error"
 	"atomic/internal/auth/jwt"
 	"atomic/internal/date"
@@ -15,14 +14,9 @@ import (
 	"time"
 )
 
-func Login(ctx context.Context, u atomic_model.User) (string, error) {
-	// mysql连接 可以自行拓展
-	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
-	if err != nil {
-		return "", err
-	}
+func (s *UserService) Login(ctx context.Context, u atomic_model.User) (string, error) {
 
-	err = u.Login(ctx, db)
+	err := u.Login(ctx, s.DB)
 	if err != nil {
 		return "", err
 	}
@@ -88,14 +82,9 @@ func Login(ctx context.Context, u atomic_model.User) (string, error) {
 	}
 }
 
-func Register(ctx context.Context, user atomic_model.User) error {
+func (s *UserService) Register(ctx context.Context, user atomic_model.User) error {
 
-	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
-	if err != nil {
-		return err
-	}
-
-	err = user.Register(ctx, db)
+	err := user.Register(ctx, s.DB)
 	if err != nil {
 		return err
 	}
@@ -103,20 +92,16 @@ func Register(ctx context.Context, user atomic_model.User) error {
 	return nil
 }
 
-func Update(ctx context.Context, user atomic_model.User) error {
-	db, err := atomic_store.DefaultDatabase(ctx, &atomic_store.Mysql{})
-	if err != nil {
-		return err
-	}
+func (s *UserService) Update(ctx context.Context, user atomic_model.User) error {
 
-	err = user.Update(ctx, db)
+	err := user.Update(ctx, s.DB)
 	if err != nil {
 		return err
 	}
 
 	return nil
 }
-func Logout(ctx context.Context, u atomic_model.User) error {
+func (s *UserService) Logout(ctx context.Context, u atomic_model.User) error {
 
 	etcdChan := make(chan bool)
 	// 更新状态

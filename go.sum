@@ -137,6 +137,10 @@ github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.m
 github.com/envoyproxy/protoc-gen-validate v0.1.0 h1:EQciDnbrYxy13PgWoY8AqoxGiPrpgBZ1R8UNe3ddc+A=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/exoscale/egoscale v0.18.1/go.mod h1:Z7OOdzzTOz1Q1PjQXumlz9Wn/CddH0zSYdCF3rnBKXE=
+github.com/facebookarchive/inject v0.0.0-20180706035515-f23751cae28b h1:fMOoGG4Aq9aK7+pZLKGaovSqYLgtGFeXmSEYnwDnxHY=
+github.com/facebookarchive/inject v0.0.0-20180706035515-f23751cae28b/go.mod h1:cMzih25s7b7Tlajy7nS4ZmgsU1mleTwL9d18tHb6tBE=
+github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691 h1:KnnwHN59Jxec0htA2pe/i0/WI9vxXLQifdhBrP3lqcQ=
+github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691/go.mod h1:sKLL1iua/0etWfo/nPCmyz+v2XDMXy+Ho53W7RAuZNY=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fatih/structs v1.1.0/go.mod h1:9NiDSp5zOcgEDl+j00MP/WkGVPOlPRLejGD8Ga6PJ7M=
 github.com/favadi/protoc-go-inject-tag v1.1.0 h1:rSTVJya9GF6mcqOO2KRAppvVMHqIkSzG9ORflxqflNA=

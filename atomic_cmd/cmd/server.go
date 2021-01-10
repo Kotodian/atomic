@@ -16,7 +16,11 @@ limitations under the License.
 package cmd
 
 import (
+	"atomic/atomic_server/atomic_handler"
 	"atomic/atomic_server/register"
+	"atomic/atomic_store"
+	"context"
+	"github.com/facebookarchive/inject"
 	"github.com/spf13/cobra"
 )
 
@@ -36,12 +40,39 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		db, err := atomic_store.DefaultDatabase(context.Background(), &atomic_store.Mysql{})
+		if err != nil {
+			panic(err)
+		}
+		graph := &inject.Graph{}
+		err = graph.Provide(&inject.Object{Value: db})
+		if err != nil {
+			panic(err)
+		}
 		if insideService == "user" {
-			register.UserServiceRegister(port)
+			handler := &atomic_handler.UserHandler{}
+			err = graph.Provide(&inject.Object{Value: handler})
+			if err != nil {
+				panic(err)
+			}
+			err = graph.Populate()
+			if err != nil {
+				panic(err)
+			}
+			register.UserServiceRegister(port, handler)
 		}
 
 		if insideService == "blog" {
-			register.BlogServiceRegistry(port)
+			handler := &atomic_handler.BlogHandler{}
+			err = graph.Provide(&inject.Object{Value: handler})
+			if err != nil {
+				panic(err)
+			}
+			err = graph.Populate()
+			if err != nil {
+				panic(err)
+			}
+			register.BlogServiceRegistry(port, handler)
 		}
 	},
 }

@@ -5,20 +5,12 @@ import (
 	"atomic/atomic_proto/common"
 	pbUser "atomic/atomic_proto/user"
 	"atomic/atomic_server/atomic_service"
-	"atomic/internal/cache"
 	"atomic/internal/proto_model"
 	"context"
-	"time"
 )
 
 type UserHandler struct {
-	Cache *cache.Cache
-}
-
-func NewUserHandler() *UserHandler {
-	handler := &UserHandler{}
-	handler.Cache = cache.New(10*time.Hour, 10*time.Minute)
-	return handler
+	UserService *atomic_service.UserService `inject:""`
 }
 
 func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp *pbUser.LoginResponse) (err error) {
@@ -27,7 +19,7 @@ func (u *UserHandler) Login(ctx context.Context, req *pbUser.LoginRequest, resp 
 	if err != nil {
 		return
 	}
-	token, err := atomic_service.Login(ctx, m)
+	token, err := u.UserService.Login(ctx, m)
 
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
@@ -51,7 +43,7 @@ func (u *UserHandler) Register(ctx context.Context, req *pbUser.RegisterRequest,
 	if err != nil {
 		return
 	}
-	err = atomic_service.Register(ctx, m)
+	err = u.UserService.Register(ctx, m)
 
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
@@ -68,7 +60,7 @@ func (u *UserHandler) Update(ctx context.Context, req *pbUser.UpdateRequest, res
 	if err != nil {
 		return
 	}
-	err = atomic_service.Update(ctx, m)
+	err = u.UserService.Update(ctx, m)
 
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
@@ -87,7 +79,7 @@ func (u *UserHandler) Logout(ctx context.Context, req *pbUser.LogoutRequest, res
 		resp.Res = common.ServerErrResponse(err)
 		return
 	}
-	err = atomic_service.Logout(ctx, m)
+	err = u.UserService.Logout(ctx, m)
 	if err != nil {
 		resp.Res = common.ServerErrResponse(err)
 		return

@@ -22,35 +22,28 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
-func UserServiceRegister(port int) {
+func UserServiceRegister(port int, handler *atomic_handler.UserHandler) {
 	log.Debug("注册用户服务")
 
 	srv := register(port, service.InnerUser)
-
-	err := pbUser.RegisterUserServiceHandler(srv.Server(), atomic_handler.NewUserHandler())
+	err := pbUser.RegisterUserServiceHandler(srv.Server(), handler)
 
 	if err != nil {
 		return
 	}
-
-	if srv != nil {
-		if err = srv.Run(); err != nil {
-			panic(err)
-		}
-	}
+	run(srv)
 }
 
-func BlogServiceRegistry(port int) {
+func BlogServiceRegistry(port int, handler *atomic_handler.BlogHandler) {
 	log.Debug("注册博客服务")
 
 	srv := register(port, service.InnerBlog)
-	blogHandler := atomic_handler.NewBlogHandler()
-	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), blogHandler)
+	err := pbBlog.RegisterBlogServiceHandler(srv.Server(), handler)
 
 	if err != nil {
 		return
 	}
-	categoryHandler := atomic_handler.NewCategoryHandler()
+	categoryHandler := &atomic_handler.CategoryHandler{}
 	err = pbBlog.RegisterCategoryServiceHandler(srv.Server(), categoryHandler)
 	if err != nil {
 		return
@@ -61,11 +54,7 @@ func BlogServiceRegistry(port int) {
 	if err != nil {
 		panic(err)
 	}
-	if srv != nil {
-		if err = srv.Run(); err != nil {
-			panic(err)
-		}
-	}
+	run(srv)
 }
 
 func register(port int, srvName string) micro.Service {
@@ -111,4 +100,12 @@ func register(port int, srvName string) micro.Service {
 // 返回消息队列
 func Broker(srv micro.Service) broker.Broker {
 	return srv.Options().Broker
+}
+
+func run(srv micro.Service) {
+	if srv != nil {
+		if err := srv.Run(); err != nil {
+			panic(err)
+		}
+	}
 }
